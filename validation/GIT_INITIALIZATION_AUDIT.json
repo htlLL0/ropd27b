@@ -1,0 +1,15 @@
+{
+  "status": "pass",
+  "at_utc": "2026-09-10T09:41:13.193329+00:00",
+  "branch": "main",
+  "staged_files": 65,
+  "staged_bytes": 638242,
+  "largest_staged_file": [
+    "code/src/r_opcd/secopd_data.py",
+    47910
+  ],
+  "staged_manifest_hashes_matched": 63,
+  "model_data_and_outputs_excluded": true,
+  "credential_pattern_hits": 0,
+  "remote_configured": false
+}

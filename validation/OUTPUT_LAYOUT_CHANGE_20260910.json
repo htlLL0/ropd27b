@@ -1,0 +1,24 @@
+{
+  "status": "pass",
+  "change": "All application results, logs, receipts and runtime caches are under output/",
+  "changed_static_files": [
+    "README_\u5148\u770b\u8fd9\u91cc.md",
+    "docker_b200.sh",
+    "install_native.sh",
+    "run_b200.sh",
+    "scripts/b200_collection.py",
+    "scripts/docker_launcher.py",
+    "tests/test_b200_portability.py"
+  ],
+  "old_manifest_sha256": "73c7ce32b6d1a3838d2838cf2970b64e2a958187d09e5d5d2fc25f34d15dde2a",
+  "new_manifest_sha256": "5cbb1a79b5aa1b66cd982db0b17a3e4028b9566760052dd802b36ec8a0fb5819",
+  "tests_passed": 14,
+  "docker_logs_persisted_after_container_removal": true,
+  "native_stdout_stderr_and_traceback_persisted": true,
+  "generation_config_unchanged": true,
+  "core_sampling_parser_unchanged": true,
+  "model_weights_unchanged": true,
+  "delivery_output_empty": true,
+  "B200_execution_verified": false,
+  "at_utc": "2026-09-10T09:20:22.868597+00:00"
+}

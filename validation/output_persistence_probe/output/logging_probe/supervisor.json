@@ -1,0 +1,10 @@
+{
+  "pid": 1,
+  "start_ticks": "1066149863",
+  "cmdline": "python3 -u -B /bundle/scripts/b200_collection.py run --run-id logging_probe --gpu 0 ",
+  "started_at_utc": "2026-09-10T09:19:02.564797+00:00",
+  "run_id": "logging_probe",
+  "docker_container": null,
+  "stop_signal": "SIGUSR1: stop submitting and drain in-flight requests",
+  "training_started": false
+}

@@ -1,13 +1,6 @@
-# Large local assets. Preserve locally; distribute separately from the Git repo.
-/model/
-/inputs/*.jsonl
-/source_data/*.jsonl
-
-# All experiment outputs, runtime logs and caches.
-/output/
-/runs/
-/validation/
-*.log
+# Only model weight shards are excluded from the delivered package.
+# Inputs, source data, tokenizer/config, and validation reports are tracked.
+/model/*.safetensors
 
 # Local Python environments and generated caches.
 /.venv/
@@ -31,12 +24,8 @@ htmlcov/
 *.pem
 *.key
 
-# Editor/OS files and local transfer archives.
+# Editor/OS files.
 .idea/
 .vscode/
 .DS_Store
 Thumbs.db
-*.tar
-*.tar.gz
-*.tgz
-*.zip

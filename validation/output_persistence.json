@@ -1,0 +1,17 @@
+{
+  "status": "pass",
+  "test": "GPU-disabled Docker process exited; stdout/stderr traceback and structured failure persist on host output mount after --rm",
+  "container_exit_code": 1,
+  "run_gpu_requests": 0,
+  "B200_execution_verified": false,
+  "persisted_files": [
+    "logging_probe/supervisor.log",
+    "logging_probe/supervisor.lock",
+    "logging_probe/config.json",
+    "logging_probe/supervisor.json",
+    "logging_probe/progress.json",
+    "logging_probe/failure.json"
+  ],
+  "expected_failure_type": "FileNotFoundError",
+  "at_utc": "2026-09-10T09:19:02.741345+00:00"
+}

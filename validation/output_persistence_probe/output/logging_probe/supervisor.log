@@ -1,0 +1,25 @@
+Traceback (most recent call last):
+  File "/bundle/scripts/b200_collection.py", line 530, in <module>
+    main()
+  File "/bundle/scripts/b200_collection.py", line 498, in main
+    run_collection(args)
+  File "/bundle/scripts/b200_collection.py", line 306, in run_collection
+    gpu = select_gpu(args.gpu)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/bundle/scripts/b200_collection.py", line 149, in select_gpu
+    values = command(['nvidia-smi', '--id=' + selector,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/bundle/scripts/b200_collection.py", line 105, in command
+    return subprocess.check_output(args, text=True, stderr=subprocess.STDOUT, timeout=timeout).strip()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'nvidia-smi'

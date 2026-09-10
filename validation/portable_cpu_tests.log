@@ -1,0 +1,22 @@
+test_all_runs_are_below_output (test_b200_portability.B200PortabilityTests.test_all_runs_are_below_output) ... ok
+test_config_only_changes_locations_metadata_and_gpu_topology (test_b200_portability.B200PortabilityTests.test_config_only_changes_locations_metadata_and_gpu_topology) ... ok
+test_docker_writes_only_to_output_mount (test_b200_portability.B200PortabilityTests.test_docker_writes_only_to_output_mount) ... ok
+test_exact_tokens_and_resume_reject_tampering (test_b200_portability.B200PortabilityTests.test_exact_tokens_and_resume_reject_tampering) ... <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+<frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+ok
+test_process_identity_has_stable_start_fingerprint (test_b200_portability.B200PortabilityTests.test_process_identity_has_stable_start_fingerprint) ... ok
+test_reject_a100_before_any_cuda_allocation (test_b200_portability.B200PortabilityTests.test_reject_a100_before_any_cuda_allocation) ... ok
+test_reject_busy_gpu (test_b200_portability.B200PortabilityTests.test_reject_busy_gpu) ... ok
+test_reject_mig_capacity (test_b200_portability.B200PortabilityTests.test_reject_mig_capacity) ... ok
+test_reject_multiple_gpu_selector_without_running_command (test_b200_portability.B200PortabilityTests.test_reject_multiple_gpu_selector_without_running_command) ... ok
+test_resume_does_not_silently_retry_incomplete_case (test_b200_portability.B200PortabilityTests.test_resume_does_not_silently_retry_incomplete_case) ... ok
+test_run_id_cannot_escape_output_root (test_b200_portability.B200PortabilityTests.test_run_id_cannot_escape_output_root) ... ok
+test_runtime_caches_and_temporary_files_stay_with_run (test_b200_portability.B200PortabilityTests.test_runtime_caches_and_temporary_files_stay_with_run) ... ok
+test_server_only_changes_topology_and_location (test_b200_portability.B200PortabilityTests.test_server_only_changes_topology_and_location) ... ok
+test_stdout_stderr_and_uncaught_errors_are_saved (test_b200_portability.B200PortabilityTests.test_stdout_stderr_and_uncaught_errors_are_saved) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 14.189s
+
+OK
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

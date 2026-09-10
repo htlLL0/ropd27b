@@ -1,2 +1,8 @@
 # Preserve portable shell scripts and the frozen package's LF text hashes.
 * text=auto eol=lf
+
+# Frozen assets must retain their original bytes across platforms.
+/inputs/** -text
+/source_data/** -text
+/model/** -text
+/validation/** -text

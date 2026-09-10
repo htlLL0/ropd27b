@@ -1,0 +1,10 @@
+{
+  "status": "pass",
+  "python_files_parsed": 3,
+  "shell_files_syntax_checked": 3,
+  "non_B200_preflight_correctly_refused": true,
+  "gpu_model_allocations": 0,
+  "B200_execution_verified": false,
+  "stderr": "Traceback (most recent call last):\n  File \"/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py\", line 500, in <module>\n    main()\n  File \"/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py\", line 465, in main\n    gpu = select_gpu(args.gpu)\n  File \"/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py\", line 127, in select_gpu\n    row = validate_gpu_row({'uuid': parts[0], 'name': parts[1], 'memory_total_mib': int(parts[2]),\n  File \"/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py\", line 113, in validate_gpu_row\n    require('B200' in row['name'], 'B200 required; selected GPU is ' + row['name'])\n  File \"/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py\", line 35, in require\n    raise RuntimeError(message)\nRuntimeError: B200 required; selected GPU is NVIDIA A100-PCIE-40GB\n",
+  "at_utc": "2026-09-10T07:36:09.172563+00:00"
+}

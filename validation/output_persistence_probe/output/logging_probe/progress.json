@@ -1,0 +1,18 @@
+{
+  "stage": "failed",
+  "completed": 0,
+  "total": 9600,
+  "in_flight": 0,
+  "elapsed_seconds": 0.021420156583189964,
+  "collection_seconds_this_session": 0,
+  "generated_tokens": 0,
+  "tokens_per_second_this_session": null,
+  "estimated_remaining_seconds": null,
+  "counts": {},
+  "missing_think_end": 0,
+  "empty_final": 0,
+  "errors": [],
+  "supervisor_pid": 1,
+  "training_started": false,
+  "updated_at_utc": "2026-09-10T09:19:02.586616+00:00"
+}

@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "exit_code": 0,
+  "relocated_root": "/bundle",
+  "original_workspace_mounted": false,
+  "network": "none",
+  "gpu_visible": false,
+  "weight_sha256_separately_verified": true,
+  "B200_execution_verified": false,
+  "at_utc": "2026-09-10T07:39:40.856597+00:00"
+}

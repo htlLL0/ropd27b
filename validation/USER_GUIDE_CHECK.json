@@ -1,0 +1,11 @@
+{
+  "status": "pass",
+  "guide": "使用说明.md",
+  "bash_blocks_syntax_checked": 14,
+  "local_links_and_scripts_exist": true,
+  "CLI_help_checked": true,
+  "output_layout": "output/main/",
+  "code_and_model_unchanged": true,
+  "B200_execution_verified": false,
+  "at_utc": "2026-09-10T09:29:36.282729+00:00"
+}

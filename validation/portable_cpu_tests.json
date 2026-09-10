@@ -1,0 +1,10 @@
+{
+  "exit_code": 0,
+  "status": "pass",
+  "tests_expected": 14,
+  "image": "vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064f86781b963bd814f",
+  "relocated_root": "/portable bundle",
+  "network": "none",
+  "gpu_visible": false,
+  "at_utc": "2026-09-10T09:19:18.178673+00:00"
+}

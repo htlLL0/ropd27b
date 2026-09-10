@@ -1,0 +1,7 @@
+{
+  "type": "FileNotFoundError",
+  "message": "[Errno 2] No such file or directory: 'nvidia-smi'",
+  "at_utc": "2026-09-10T09:19:02.586108+00:00",
+  "automatic_retry": false,
+  "training_started": false
+}
