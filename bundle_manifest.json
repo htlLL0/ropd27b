@@ -26,8 +26,8 @@
       "sha256": "1d6f7ca4cadc60164e61e9dbc0b263c72af7d4edae8b796c1370870c4282f911"
     },
     "README.md": {
-      "bytes": 29663,
-      "sha256": "078bc5ede57061d7bf02ff3fd3864bfc0568e43699dc601eb8cdb20868e7ec1f"
+      "bytes": 31396,
+      "sha256": "310cdbb86a98223571ad322296afe60c3bd0652d4bfc31dc85befada33ff2d4b"
     },
     "agentdojo_b200.sh": {
       "bytes": 437,
@@ -1014,7 +1014,7 @@
       "sha256": "42208d40540bcef8772fe317c3c58da5382b7cf69e44b588dba989e69dfda29a"
     }
   },
-  "static_bytes": 55846218614,
+  "static_bytes": 55846220347,
   "runtime_results_excluded": "output/",
   "B200_execution_verified": false,
   "output_layout": {
@@ -1025,7 +1025,7 @@
     "supervisor_log": "output/main/supervisor.log",
     "model_server_log": "output/main/server.log"
   },
-  "updated_at_utc": "2026-09-10T11:56:25.767037+00:00",
+  "updated_at_utc": "2026-09-10T12:02:36.372708+00:00",
   "operator_guide": "README.md",
   "git_distribution": {
     "large_assets_excluded": [
