@@ -1,6 +1,6 @@
 # 在另一台 B200 服务器上生成 9,600 条数据
 
-按本 README 操作即可。**仓库已包含全部代码、输入数据和模型配套文件，只需另行补入 18 个模型权重分片。全部日志和结果统一保存在仓库的 `output/` 中。**
+按本 README 操作即可。**仓库已包含全部代码、输入数据和模型配套文件；在 B200 服务器上从上游开源模型仓库下载 18 个权重分片即可。全部日志和结果统一保存在仓库的 `output/` 中。**
 
 固定配置：Qwen3.8-27B、单张 B200、BF16、TP=1、并发 16、温度 1.0、`top_p=1.0`、thinking 开启，每条最多生成 16,384 tokens，上下文上限 32,768。无需修改配置或重新生成输入数据。
 
@@ -8,11 +8,11 @@
 
 推荐使用 Docker。目标服务器需要：
 
-- Linux x86_64、Git、Python 3.10 或更新。
+- Linux x86_64、Git、Python 3.10 或更新（带 `venv` 模块，用于安装下载工具）。
 - 一张完整、空闲的 NVIDIA B200，NVIDIA 驱动支持 CUDA 13（建议 580 或更新，以预检为准）。
 - Docker 和已配置的 NVIDIA Container Toolkit，当前账号能够运行 GPU 容器。
 - 足够的磁盘空间：模型及数据约 55.84 GB，另外为 Docker 镜像、生成结果和缓存预留空间。
-- 首次能够访问 GitHub 和 Docker 镜像仓库；权重、依赖和镜像准备好后，生成过程不需要联网。
+- 首次能够访问 GitHub、Hugging Face、PyPI 和 Docker 镜像仓库；权重、依赖和镜像准备好后，生成过程不需要联网。
 
 在 **B200 服务器的终端**检查：
 
@@ -36,24 +36,36 @@ cd "$HOME/ropd27b"
 
 后续命令均在这个目录中执行。`inputs/`、`source_data/`、tokenizer 和配置已经齐全，无需 Git LFS。
 
-### 2. 把权重放入 model/
+### 2. 在 B200 服务器上从开源仓库下载权重
 
-使用 **`Qwen/Qwen3.8-27B` 的 revision `1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0`**。将对应的 18 个 `model-*-of-*.safetensors` 文件上传到 B200 服务器的 `$HOME/ropd27b/model/`，总计约 55.6 GB。
+权重来源是 [Qwen/Qwen3.8-27B 官方开源仓库](https://huggingface.co/Qwen/Qwen3.8-27B/tree/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0)，固定 revision 为 **`1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0`**。它与此前 SecOPD 项目目录中使用的模型来源和权重一致，18 个分片共约 55.6 GB。
 
-如果权重已经位于 B200 服务器的其他目录，替换源路径后复制：
-
-```bash
-cp /path/to/Qwen3.8-27B/model-*-of-*.safetensors ./model/
-```
-
-如果要从原服务器拉取，在 B200 服务器上执行以下命令，将账号、地址和源目录替换为实际值（需要两端均有 `rsync`，且 SSH 可以连接）：
+在 B200 服务器的 `$HOME/ropd27b` 目录中执行以下整段命令。它使用独立虚拟环境安装官方 `hf` 下载工具，直接下载到 `model/`，随后完整校验文件：
 
 ```bash
-rsync -avP -s --include='*.safetensors' --exclude='*' \
-  'SOURCE_USER@SOURCE_HOST:/absolute/path/to/model/' ./model/
+(
+  set -euo pipefail
+  mkdir -p output/logs output/setup
+  python3 -m venv .venv
+
+  PIP_CACHE_DIR="$PWD/output/setup/pip-cache" \
+    .venv/bin/python -m pip install "huggingface_hub==1.8.0" \
+    2>&1 | tee -a output/setup/install_hf.log
+
+  HF_HOME="$PWD/output/setup/huggingface" HF_HUB_DOWNLOAD_TIMEOUT=60 \
+    .venv/bin/hf download Qwen/Qwen3.8-27B \
+      --revision 1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0 \
+      --include 'model-*-of-*.safetensors' \
+      --local-dir ./model \
+    2>&1 | tee -a output/logs/download_weights.log
+
+  ./run_b200.sh verify
+)
 ```
 
-两种方式选一种即可。复制真实权重文件，不要放软链接或 Git LFS 指针；保留仓库中已有的 tokenizer、配置及权重索引。
+下载日志为 `output/logs/download_weights.log`，工具安装日志为 `output/setup/install_hf.log`，文件校验日志为 `output/logs/native_verify.log`。断网或下载失败后，网络恢复时重新执行本步骤；保留已下载文件和下载元数据。
+
+命令只下载权重，不覆盖仓库中的 tokenizer、配置或权重索引。固定 revision 下的 18 个分片已与本包的大小和 SHA256 逐一核对；看到校验输出 `"status": "pass"` 后继续第三步。官方命令说明见 [Hugging Face 下载文档](https://huggingface.co/docs/huggingface_hub/guides/cli#hf-download)。
 
 ### 3. 下载运行镜像并预检 B200
 
@@ -109,8 +121,8 @@ tail -n 100 -F output/main/server.log
 
 ```text
 output/
-├── logs/                    # 镜像下载、预检、启动、暂停等命令日志
-├── setup/                   # 原生安装日志及 pip 缓存（仅原生方式）
+├── logs/                    # 权重/镜像下载、校验、预检、启动、暂停等日志
+├── setup/                   # 下载工具/原生依赖安装日志及缓存
 └── main/                    # 默认任务目录
     ├── supervisor.log       # 主程序 stdout/stderr 和异常堆栈
     ├── server.log           # 模型服务日志
@@ -163,7 +175,7 @@ wc -l output/main/generations.jsonl
 
 ## 没有 Docker 时
 
-先完成前面的仓库克隆和权重复制。使用带 `venv` 模块的 Python 3.12，安装依赖需要联网；驱动和 B200 的要求相同。
+先完成前面的仓库克隆和开源权重下载。使用带 `venv` 模块的 Python 3.12，安装依赖需要联网；驱动和 B200 的要求相同。
 
 ```bash
 ./install_native.sh
@@ -194,9 +206,11 @@ tail -n 100 -F output/main/supervisor.log
 | 现象 | 操作 |
 |---|---|
 | Docker 不可用或权限不足 | 检查 Docker 服务和账号权限；无法使用时改用原生方式 |
+| 创建虚拟环境提示缺少 `venv` 或 `ensurepip` | 安装与当前 Python 匹配的 venv 组件后重试第二步；Ubuntu/Debian 通常为 `python3-venv` |
+| 权重下载连接失败或超时 | 检查目标服务器到 Hugging Face 的连接及代理，查看 `output/logs/download_weights.log`，恢复网络后重试第二步 |
 | 找不到 `nvidia` runtime 或 GPU | 检查 NVIDIA Container Toolkit 是否已为 Docker 配置 |
 | `B200 required` / GPU 已被占用 | 核对 `nvidia-smi`，选择正确且空闲的完整 B200 |
-| 文件缺失、软链接、大小或 SHA256 不匹配 | 检查 18 个权重是否传输完整、revision 是否正确，以及是否混用了不同版本文件 |
+| 文件缺失、软链接、大小或 SHA256 不匹配 | 检查 18 个权重是否下载完整、revision 是否正确，以及是否混用了不同版本文件 |
 | `Environment differs from pinned image` | 使用脚本指定的固定镜像，或用原生安装脚本建立匹配环境 |
 | 已有任务或 `FileExistsError` | 查看现有状态；干净暂停后用 `--resume`，独立任务用新的 `--run-id` |
 | 主程序日志尚未创建 | 查看 `output/logs/docker_start.log` 或 `output/logs/native_start.log` |

@@ -14,12 +14,12 @@
       "sha256": "3485ee1c65acebe69217bfb43a306b7b43f4e168f7410cb2804e6e6d2634a618"
     },
     ".gitignore": {
-      "bytes": 482,
-      "sha256": "828e4f92f8eef0ddf9d27c68561ff780c2283dbbb8d2ddedf58c7c40046b8105"
+      "bytes": 497,
+      "sha256": "a31245604068196fb00bc5a33b8e0639f0a283b5b4a8004d492068cedc98d7a9"
     },
     "README.md": {
-      "bytes": 10443,
-      "sha256": "3ee22d1e4df4dd7c4e0f7c03b33692b82a8e4d30380deffe1f4d89499f2264f2"
+      "bytes": 11783,
+      "sha256": "12cfe7859e18f644a82ea4b6e8eb5fd29ed7ea9a6cd62bc8967da14248505941"
     },
     "code/src/r_opcd/__init__.py": {
       "bytes": 843,
@@ -470,7 +470,7 @@
       "sha256": "7c92d43c476a6c8f8c105c97a35d9ef59ee3e969916776a8796f261b41da3e65"
     }
   },
-  "static_bytes": 55843745357,
+  "static_bytes": 55843746712,
   "runtime_results_excluded": "output/",
   "B200_execution_verified": false,
   "output_layout": {
@@ -481,7 +481,7 @@
     "supervisor_log": "output/main/supervisor.log",
     "model_server_log": "output/main/server.log"
   },
-  "updated_at_utc": "2026-09-10T10:37:36.180611+00:00",
+  "updated_at_utc": "2026-09-10T10:43:07.034142+00:00",
   "operator_guide": "README.md",
   "git_distribution": {
     "large_assets_excluded": [
@@ -509,6 +509,18 @@
       "content_sha256": "57e4bdb258ee1a7d2635c5174ebd4e56abe392505cdb5f8bbb356b0dc4293641",
       "content_unchanged": true,
       "reason": "Keep one project README while preserving the complete upstream model card."
+    },
+    "weight_download": {
+      "repo_id": "Qwen/Qwen3.8-27B",
+      "revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+      "include": "model-*-of-*.safetensors",
+      "local_dir": "model",
+      "client": "huggingface_hub==1.8.0",
+      "log": "output/logs/download_weights.log",
+      "source_url": "https://huggingface.co/Qwen/Qwen3.8-27B/tree/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+      "upstream_weight_sizes_and_sha256_match": true,
+      "cli_dry_run_weight_files": 18,
+      "cli_dry_run_bytes": 55563006776
     }
   },
   "validation_receipts": "validation/: historical local checks, included in Git and static manifest; not B200 execution evidence"

@@ -1,6 +1,7 @@
 # Only model weight shards are excluded from the delivered package.
 # Inputs, source data, tokenizer/config, and validation reports are tracked.
 /model/*.safetensors
+/model/.cache/
 
 # Local Python environments and generated caches.
 /.venv/
