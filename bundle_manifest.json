@@ -17,9 +17,13 @@
       "bytes": 497,
       "sha256": "a31245604068196fb00bc5a33b8e0639f0a283b5b4a8004d492068cedc98d7a9"
     },
+    "Dockerfile.training": {
+      "bytes": 393,
+      "sha256": "1d6f7ca4cadc60164e61e9dbc0b263c72af7d4edae8b796c1370870c4282f911"
+    },
     "README.md": {
-      "bytes": 11783,
-      "sha256": "12cfe7859e18f644a82ea4b6e8eb5fd29ed7ea9a6cd62bc8967da14248505941"
+      "bytes": 19718,
+      "sha256": "0750f0f67df6320dc5fc3ac59736ddbb2e11dc11b35857cdee2f4925f8a2e323"
     },
     "code/src/r_opcd/__init__.py": {
       "bytes": 843,
@@ -40,6 +44,10 @@
     "code/src/r_opcd/calibration_split.py": {
       "bytes": 5034,
       "sha256": "e0da0fb421b0342b8fdfdb39df279aae38d447c83f7b9ec833bd712474320702"
+    },
+    "code/src/r_opcd/clean_teacher_opcd.py": {
+      "bytes": 6910,
+      "sha256": "25ede0d9eac66917abe4b900ac6931812a140dab4599100b2023ddcf8df78e23"
     },
     "code/src/r_opcd/closed_label_verifier.py": {
       "bytes": 7849,
@@ -168,6 +176,10 @@
     "code/tools/collect_secopd_qwen36_9600.py": {
       "bytes": 15539,
       "sha256": "af544d9b2afaee2baa9a6e255c0ea45299a81fd98a434c10e4c35e4ecb902c0d"
+    },
+    "config/clean_teacher_opcd.json": {
+      "bytes": 1719,
+      "sha256": "48672dc804343330ad394f1c6d6fe1d24ff71dd51bdbfff77385d89ee6404ae1"
     },
     "config/generation.json": {
       "bytes": 2020,
@@ -333,6 +345,10 @@
       "bytes": 1675,
       "sha256": "5b51b96f6423de6e46e9bfb2961afe97b715e9bb21a1343196b01688e2ee2c1d"
     },
+    "provenance/clean_teacher_opcd_contract.json": {
+      "bytes": 3247,
+      "sha256": "5d262f120dfaec6719669b1cfd1b54ad51422a8cdbb1fc19770d8f3aa7a89a1b"
+    },
     "provenance/source_a100_runner.py.txt": {
       "bytes": 20507,
       "sha256": "3fe131b36859c60d42e4bc67e0c4644583626f8af3c5933c27eb62ab7823670d"
@@ -369,6 +385,10 @@
       "bytes": 183,
       "sha256": "8c84e1a64f58643e84bb9de153ac117d8cda586bf44d046282757a4bde689c55"
     },
+    "requirements-training.txt": {
+      "bytes": 38,
+      "sha256": "15f306e7dbe43ce3edcc328b3e9bcec74baed47f9552995130ee65c0e2eebcda"
+    },
     "run_b200.sh": {
       "bytes": 760,
       "sha256": "2398454ec7125fcb94f244eb041201d0cdb9621ca729a3b3a2c6b22f00239a72"
@@ -380,6 +400,14 @@
     "scripts/docker_launcher.py": {
       "bytes": 5844,
       "sha256": "d621d40d50e6721b56bbcd275b7f029d4159908ed4c88e028633ec375b669c01"
+    },
+    "scripts/train_clean_teacher.py": {
+      "bytes": 19011,
+      "sha256": "08397806f12571e7b3506885e5f5604dc0a9a3e8f2ecf356374caca82e70af74"
+    },
+    "scripts/training_launcher.py": {
+      "bytes": 6250,
+      "sha256": "59b07b94be15e3a551368ffa7a464c105926427f530a3031f97f17a37986d9c0"
     },
     "source_data/attack_candidates.jsonl": {
       "bytes": 56027069,
@@ -401,6 +429,10 @@
       "bytes": 8585,
       "sha256": "0c3dc9faa884b17fcb5c08fa40a40a09530c90599d481a83adbaad32d9924d3d"
     },
+    "train_b200.sh": {
+      "bytes": 434,
+      "sha256": "160d50959cb1425d2bead74e86acd2fb293ef77a79432435dede8c1fb1bbdf8a"
+    },
     "validation/DELIVERY_VERIFICATION.json": {
       "bytes": 3365,
       "sha256": "3b2ffee25cf45b05119629abb3355c6dca6a71266b7e7299d91e6e02ca1d2032"
@@ -416,6 +448,10 @@
     "validation/USER_GUIDE_CHECK.json": {
       "bytes": 313,
       "sha256": "007d6a66363fa2e201dba6a10838a7cd8674e935972b76dca0409cd96de2fe1a"
+    },
+    "validation/clean_teacher_training_verification.json": {
+      "bytes": 2531,
+      "sha256": "ec3e4e4c26ddacd7be23c0de52446ffc5980afc8dc09d0715ae78e2df4c1b2a4"
     },
     "validation/model_copy_verification.json": {
       "bytes": 7330,
@@ -468,9 +504,13 @@
     "validation/static_and_negative_gpu_gate.json": {
       "bytes": 1314,
       "sha256": "7c92d43c476a6c8f8c105c97a35d9ef59ee3e969916776a8796f261b41da3e65"
+    },
+    "validation/test_clean_teacher_opcd.py": {
+      "bytes": 9199,
+      "sha256": "ec9bccf98fdf00e147332afc4c0ce6dc602a3b60d223220210c3c3de9beed3ee"
     }
   },
-  "static_bytes": 55843746712,
+  "static_bytes": 55843804379,
   "runtime_results_excluded": "output/",
   "B200_execution_verified": false,
   "output_layout": {
@@ -481,7 +521,7 @@
     "supervisor_log": "output/main/supervisor.log",
     "model_server_log": "output/main/server.log"
   },
-  "updated_at_utc": "2026-09-10T10:43:07.034142+00:00",
+  "updated_at_utc": "2026-09-10T11:15:10.338156+00:00",
   "operator_guide": "README.md",
   "git_distribution": {
     "large_assets_excluded": [
@@ -523,5 +563,14 @@
       "cli_dry_run_bytes": 55563006776
     }
   },
-  "validation_receipts": "validation/: historical local checks, included in Git and static manifest; not B200 execution evidence"
+  "validation_receipts": "validation/: historical local checks, included in Git and static manifest; not B200 execution evidence",
+  "training_variant": {
+    "config": "config/clean_teacher_opcd.json",
+    "launcher": "train_b200.sh",
+    "objective": "clean_teacher_unlabeled_OPCD",
+    "semantic_labels": false,
+    "clean_sft": false,
+    "training_output": "output/clean_opcd/",
+    "B200_training_verified": false
+  }
 }

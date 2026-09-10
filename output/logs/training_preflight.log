@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/training_launcher.py", line 108, in <module>
+    main()
+  File "/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/training_launcher.py", line 71, in main
+    gpu = core.select_gpu(args.gpu)
+  File "/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py", line 155, in select_gpu
+    row = validate_gpu_row({'uuid': parts[0], 'name': parts[1], 'memory_total_mib': int(parts[2]),
+  File "/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py", line 141, in validate_gpu_row
+    require('B200' in row['name'], 'B200 required; selected GPU is ' + row['name'])
+  File "/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py", line 35, in require
+    raise RuntimeError(message)
+RuntimeError: B200 required; selected GPU is NVIDIA A100-PCIE-40GB

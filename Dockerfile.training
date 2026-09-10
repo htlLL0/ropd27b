@@ -1,0 +1,3 @@
+FROM vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064f86781b963bd814f
+RUN python3 -m pip install --no-cache-dir --no-deps peft==0.20.0
+RUN NVIDIA_VISIBLE_DEVICES=void CUDA_VISIBLE_DEVICES= python3 -c "import peft, torch, transformers; assert peft.__version__ == '0.20.0'; assert torch.__version__ == '2.11.0+cu130'; assert transformers.__version__ == '5.12.1'"

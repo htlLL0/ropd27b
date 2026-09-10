@@ -1,0 +1,30 @@
+{
+  "user_request": "Add an unlabeled all-OPD variant: T+ sees clean input; T- and student see the original attacked input; no benign SFT.",
+  "decision": "Keep the existing full-vocabulary T+/T- corrective objective; all attacked source rows enter OPCD with attack_gate=1 and c=1. Do not select on semantic A/U labels or perform calibration. The existing token-level disagreement/deficit mask remains part of the objective.",
+  "closest_implementation": {
+    "repository": "https://github.com/pppyb/SecOPD",
+    "commit": "571502a2a315c4b8820dd878d4569e2a2222cb88",
+    "file": "training/tinker/overrides/tinker_cookbook/recipes/distillation/pi_defense_full_response_kl.py",
+    "transferable_contract": "Clean prompt plus the same full realized student response; no gold response in teacher prompt; attacked student input.",
+    "differences": "Official implementation uses a single clean teacher and sampled reverse-KL advantages with online sampling; this variant retains T- and the existing OPCD full-vocabulary geometry on fixed initial rollouts."
+  },
+  "reused_local_authority": {
+    "objective": "code/src/r_opcd/objective.py",
+    "hyperparameter_origin": "R-OPCD-V3/configs/stage3o_fixed_rollout_train_qwen3_8b.json: eta=.7, delta_max=2, hybrid=.5, rank=8, alpha=16, lr=1e-5",
+    "not_adopted": "Separate teacher_top32 ablation, clean SFT, label filtering, c calibration, old Qwen3-8B model/3072-token/non-thinking limits",
+    "model_adaptation": "Qwen3_5 conditional generation text decoder; LoRA on full-attention q/k/v/o only. Linear-attention and vision weights stay frozen."
+  },
+  "evaluation_contract": {
+    "data": "Existing frozen 9600 training candidates and exact initial-student rollouts; dev/test and parent utility controls are not training inputs.",
+    "comparators_for_future_scientific_evaluation": ["same frozen base", "existing OPCD branch", "official single-clean-teacher SecOPD-style loss"],
+    "evaluation": "Not run in this packaging task. Any later AgentDojo evaluation must retain its procedural utility/attack-success scoring contract and matched inputs.",
+    "allowed_validation": "CPU numerical gradients, tiny actual hybrid-model LoRA train/save/resume, all-row prompt and provenance validation, B200 runtime preflight and first-update gate on target.",
+    "stop_line": "Refuse malformed or mismatched trajectories, hidden truncation, busy/wrong GPU, nonfinite or missing adapter gradients, uncommitted resume state, or changed provenance; preserve previous checkpoints."
+  },
+  "runtime_decisions": {
+    "layout": "Reuse output/main generation; independent output/clean_opcd training with logs, caches, checkpoints, progress and receipts.",
+    "memory": "One frozen BF16 base; teachers sequential with adapter disabled; checkpointed student decoder; chunked full-vocabulary head gradients with one decoder backward.",
+    "schedule": "One seeded shuffled epoch, one trajectory per optimizer step, 9600 total. First successful update is checkpointed and counted, then continue; save every 100 and on graceful pause; keep last two committed checkpoints.",
+    "limitations": "No B200 is accessible locally. CPU gates do not prove 27B GPU throughput, memory peak, or training effectiveness."
+  }
+}

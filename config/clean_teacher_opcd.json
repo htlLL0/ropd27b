@@ -1,0 +1,48 @@
+{
+  "schema": "clean-teacher-opcd-fixed-rollout-v1",
+  "model_name": "Qwen/Qwen3.8-27B",
+  "model_revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+  "samples": 9600,
+  "epochs": 1,
+  "seed": 20260910,
+  "teacher_plus_view": "user_query_and_original_clean_context",
+  "teacher_minus_view": "same_original_attacked_prompt_as_student",
+  "teachers": "shared_frozen_initial_base_adapter_disabled",
+  "response": "same_student_response_including_thinking_and_terminal_tokens",
+  "trajectory_mode": "frozen_initial_student_rollouts_cycle0",
+  "semantic_label_filter": false,
+  "attack_gate": 1.0,
+  "reliability_weight": 1.0,
+  "clean_sft_weight": 0.0,
+  "objective": {
+    "tau_disagreement": 0.0,
+    "delta_min": 0.0,
+    "delta_max": 2.0,
+    "eta": 0.7,
+    "lambda_forward": 0.5,
+    "eps_alpha": 1e-8,
+    "eps_loss": 1e-8,
+    "teacher_plus_top_k": null
+  },
+  "lora": {
+    "r": 8,
+    "lora_alpha": 16,
+    "lora_dropout": 0.0,
+    "bias": "none",
+    "target_modules": ".*language_model\\.layers\\.[0-9]+\\.self_attn\\.(q_proj|k_proj|v_proj|o_proj)"
+  },
+  "optimizer": {"learning_rate": 1e-5, "weight_decay": 0.0, "max_grad_norm": 1.0},
+  "runtime": {
+    "dtype": "bfloat16",
+    "attention_implementation": "sdpa",
+    "max_sequence_tokens": 32768,
+    "response_chunk_size": 16,
+    "gradient_checkpointing": true,
+    "micro_batch_size": 1,
+    "gradient_accumulation_steps": 1,
+    "save_every": 100,
+    "keep_last_checkpoints": 2
+  },
+  "versions": {"peft": "0.20.0"},
+  "evidence_boundary": "Added clean-teacher unlabeled OPCD variant. Fixed-rollout cycle, not strict online SecOPD reproduction. No model quality claim. No sequence truncation. Capped responses remain OPD without fabricated EOS."
+}

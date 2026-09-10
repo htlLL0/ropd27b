@@ -1,6 +1,8 @@
-# 在另一台 B200 服务器上生成 9,600 条数据
+# 在单张 B200 上生成 9,600 条数据并训练 clean-T+ OPCD
 
-按本 README 操作即可。**仓库已包含全部代码、输入数据和模型配套文件；在 B200 服务器上从上游开源模型仓库下载 18 个权重分片即可。全部日志和结果统一保存在仓库的 `output/` 中。**
+按本 README 操作即可。**仓库已包含代码、输入数据和模型配套文件；在 B200 服务器上从上游开源模型仓库下载 18 个权重分片。全部日志、生成结果和训练 checkpoint 统一保存在仓库的 `output/` 中。**
+
+新增无需标注的训练路线：**T+ 看到原始干净输入，T− 和 student 看到同一份带攻击输入；全部 9,600 条进入 OPCD，不做正常样例 SFT。** 先完成下面 4 步生成，再执行“无需标注，直接训练”中的命令。已有本包完整生成结果时可直接进入训练。
 
 固定配置：Qwen3.8-27B、单张 B200、BF16、TP=1、并发 16、温度 1.0、`top_p=1.0`、thinking 开启，每条最多生成 16,384 tokens，上下文上限 32,768。无需修改配置或重新生成输入数据。
 
@@ -11,7 +13,7 @@
 - Linux x86_64、Git、Python 3.10 或更新（带 `venv` 模块，用于安装下载工具）。
 - 一张完整、空闲的 NVIDIA B200，NVIDIA 驱动支持 CUDA 13（建议 580 或更新，以预检为准）。
 - Docker 和已配置的 NVIDIA Container Toolkit，当前账号能够运行 GPU 容器。
-- 足够的磁盘空间：模型及数据约 55.84 GB，另外为 Docker 镜像、生成结果和缓存预留空间。
+- 足够的磁盘空间：模型及数据约 55.84 GB，另外为 Docker 镜像、生成结果、训练缓存和 checkpoint 预留空间。训练只保存 LoRA、优化器和恢复状态，保留最近两个完整 checkpoint。
 - 首次能够访问 GitHub、Hugging Face、PyPI 和 Docker 镜像仓库；权重、依赖和镜像准备好后，生成过程不需要联网。
 
 在 **B200 服务器的终端**检查：
@@ -145,7 +147,105 @@ cat output/main/completion.json
 wc -l output/main/generations.jsonl
 ```
 
-完成后复制整个 `output/` 即可带走日志、结果和回执。生成的是训练候选轨迹，`training_ready=false` 为预期状态，后续仍需标注和训练集成；本任务不会自动启动训练。
+完成后复制整个 `output/` 即可带走日志、结果和回执。生成文件中的 `training_ready=false` 是原收集流程的通用标记；新增的 clean-T+ 路线会独立审计原始响应并创建自己的训练准入回执，**无需补 A/U 标注**。生成任务完成后退出，训练需执行下一节的命令。
+
+## 无需标注，直接训练
+
+### 1. 准备训练镜像并检查
+
+在同一仓库目录执行；首次构建需要访问 PyPI，随后训练不联网。镜像在上述固定 vLLM/CUDA 13 镜像上增加 `peft==0.20.0`，不升级原有 PyTorch/Transformers。构建不会把 56 GB 模型发送给 Docker。
+
+```bash
+./train_b200.sh build
+./train_b200.sh check
+./train_b200.sh preflight --gpu 0
+```
+
+`check` 不占 GPU：检查 9,600 对真实 clean/attacked 输入，以及小型随机初始化 Qwen 混合注意力模型的反向传播、冻结 teacher、梯度一致性与保存恢复。日志保存在 `output/logs/training_check.log`。它不等于 27B 在 B200 上的实测。
+
+### 2. 生成完成后启动训练
+
+确认 `./docker_b200.sh status` 为 `generation_complete`，生成容器已经退出，再执行：
+
+```bash
+./train_b200.sh start --gpu 0
+./train_b200.sh status
+watch -t -n 5 ./train_b200.sh status
+```
+
+默认读取 `output/main/`，后台训练写入 `output/clean_opcd/`。退出 SSH 后 Docker 训练继续运行。启动后先重新审计全部 raw response、token、来源与汇总文件，然后加载模型。**第一步实际完成 27B 的前向、反向、LoRA 更新及 checkpoint 保存，通过后自动继续余下训练。** 第一步计入总数 9,600，不额外生成、不做试验数据混入。
+
+```bash
+# 训练日志
+./train_b200.sh logs
+
+# 真实第一步检查结果（第一次更新完成后出现）
+cat output/clean_opcd/first_update_gate.json
+
+# 最终回执和最近的 checkpoint（训练完成后检查）
+cat output/clean_opcd/completion.json
+cat output/clean_opcd/latest_checkpoint.json
+```
+
+完成标准：状态 `training_complete`、`9600/9600`，`completion.json` 中 `all_samples_opcd=true`、`semantic_labels_used=false`、`clean_sft_used=false`，随后容器退出并释放显卡。训练 ETA 在本次会话完成 10 次更新后按实测速率显示；长短样本差异较大，ETA 仅作参考。
+
+### 3. 暂停和恢复
+
+```bash
+./train_b200.sh pause
+./train_b200.sh status
+# 等到 paused 且容器 Running=false 后恢复
+./train_b200.sh start --gpu 0 --resume
+```
+
+暂停会等待当前更新完成，并保存 LoRA、优化器、随机状态和训练位置。第一步、每 100 步、正常暂停及最终步骤保存 checkpoint，保留最近两个完整版本。异常退出时保留已有数据与 checkpoint；恢复从最近完整 checkpoint 继续，尚未保存的更新会重新计算。不要在同一个运行目录里修改配置、代码或输入。出现错误查看 `output/clean_opcd/failure.json` 和 `supervisor.log`。
+
+若生成任务名称不是 `main`，或需要另开训练，所有管理命令使用对应名称：
+
+```bash
+./train_b200.sh start --gpu 0 --generation-run-id run2 --run-id clean_opcd_run2
+./train_b200.sh status --run-id clean_opcd_run2
+```
+
+### 训练配置和数据流
+
+| 项目 | 本版本行为 |
+|---|---|
+| T+ 输入 | 原始 `user_query + clean_context`；不带注入，不使用 gold answer 或原 quarantine 视图 |
+| T− / student 输入 | 相同的原版 `user_query + contaminated_context` |
+| 三方回答序列 | 同一条实际采样的 student response，含 thinking、final 和实际返回的结束 token；teacher 不另生成答案 |
+| 样例 | 9,600 条全部参与，一次固定随机打乱、一轮训练；不按 A/U、风险标签、是否攻击成功筛选 |
+| 损失 | 保留现有全词表 T+/T− OPCD 方向、deficit 和 Hybrid-KL；`eta=0.7`、`delta_max=2`、forward/reverse 各 0.5 |
+| 标注 / 正常 SFT | 不需要标注，`attack_gate=1`、`c=1`、SFT 权重为 0；不读取 parent utility controls，不做 c 标定 |
+| token 门控 | 保留 OPCD 原有 disagreement/deficit 门控；无须修正的 token 可以贡献零损失，不转为 SFT |
+| LoRA / 优化器 | rank 8、alpha 16、dropout 0；Qwen 文本全注意力层的 q/k/v/o；AdamW，LR `1e-5`，梯度裁剪 1 |
+| 单卡内存 | 共用一个冻结 BF16 底座；两 teacher 关闭 adapter 并顺序前向；student 梯度 checkpoint；词表投影按 16 tokens 分块、一次 decoder 反向 |
+| 长度 | 上限 32,768，禁止静默截断；达到生成上限的真实响应也做 OPCD，不补造 EOS，不按答案格式删样本 |
+
+完整配置见 [config/clean_teacher_opcd.json](config/clean_teacher_opcd.json)，实现边界见 [provenance/clean_teacher_opcd_contract.json](provenance/clean_teacher_opcd_contract.json)。LoRA 使用 [PEFT 官方实现](https://huggingface.co/docs/peft/package_reference/lora)。当前训练镜像使用 Transformers 的 PyTorch 线性注意力实现，未额外编译 FLA/causal-conv1d；实际 27B 长序列速度与显存以目标机第一步和后续日志为准，OOM 会停止并保留 checkpoint，不自动缩短序列。
+
+**本版沿用“先生成 9,600 条，再训练”的固定轨迹流程。** clean teacher 与完整 response 对齐方式参考 SecOPD，但保留 T− 和 OPCD 损失；它不是每步更新 student 后重新采样的严格在线 SecOPD。现有仅生成入口继续可用，原数据、采样温度和旧 teacher views 保留。
+
+```text
+output/
+├── logs/training_*.log        # 镜像构建、检查、预检、启动和暂停日志
+├── setup/training_tests/     # CPU 验证临时目录
+├── main/                    # 原始 9600 条生成结果
+└── clean_opcd/
+    ├── supervisor.log       # 完整训练日志和异常
+    ├── training_samples.jsonl
+    ├── input_gate.json      # 本路线的输入与原始响应审计
+    ├── first_update_gate.json
+    ├── progress.json
+    ├── metrics.jsonl        # 更新日志；异常恢复可能重算未提交的更新
+    ├── latest_checkpoint.json
+    ├── checkpoints/         # adapter_model.safetensors、配置、optimizer/RNG、游标与校验
+    ├── completion.json
+    ├── cache/
+    └── tmp/
+```
+
+最终产物是 **LoRA adapter**。使用时仍需本 README 固定 revision 的基础权重；adapter 路径由 `latest_checkpoint.json` 的 `path` 给出，相对于 `output/clean_opcd/`。
 
 ## 暂停、恢复和另开任务
 
@@ -186,6 +286,22 @@ watch -t -n 5 ./run_b200.sh status
 ```
 
 依赖安装在仓库的 `.venv/`，安装日志为 `output/setup/install_native.log`，其余结果布局与 Docker 相同。
+
+如果还要原生运行 clean-T+ 训练，在已有依赖基础上安装 PEFT，然后前台运行；请放在 `tmux` 或平台持久任务中：
+
+```bash
+(
+  set -euo pipefail
+  PIP_CACHE_DIR="$PWD/output/setup/pip-cache" \
+    .venv/bin/python -m pip install --no-deps peft==0.20.0 \
+    2>&1 | tee -a output/setup/install_training.log
+)
+.venv/bin/python -u -B scripts/train_clean_teacher.py run --gpu 0
+# 通过 Ctrl+C 请求保存后暂停；确认进程退出后恢复：
+.venv/bin/python -u -B scripts/train_clean_teacher.py run --gpu 0 --resume
+```
+
+训练输出仍为 `output/clean_opcd/`，可直接读取其中的 `progress.json`；不要混用原生和 Docker 管理同一个训练目录。
 
 ```bash
 # 查看主程序日志
@@ -229,5 +345,7 @@ vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064
 镜像包含 PyTorch 2.11.0+cu130、CUDA 13.0、vLLM 0.24.0、Transformers 5.12.1，并含 B200 的 `sm_100` 编译支持。
 
 已完成全新克隆、全部权重哈希、9,600 条真实输入和 14 项 CPU 测试；使用明确标记的模拟响应完成了暂停、恢复及 9,600 条汇总流程。**目标 B200 的真实执行仍需该服务器的预检与 12 条真实生成验证通过。** 仿真数据不能用于训练或模型评估。
+
+新增训练路线已通过 9,600 对原生 tokenizer 输入检查和 **8 项 CPU 测试**，包括 BF16 小型混合注意力模型更新、全词表分块梯度一致、teacher 冻结、checkpoint 完整性及恢复、拒绝仿真数据。普通用户权限的 Docker 入口也已检查。记录见 [validation/clean_teacher_training_verification.json](validation/clean_teacher_training_verification.json)。尚未在真实 B200 上运行 27B 训练，实际吞吐、长序列峰值显存与模型效果尚未验证。
 
 本项目的操作说明统一在本 README。模型卡保存在 [model/MODEL_CARD.md](model/MODEL_CARD.md)，许可见 [model/LICENSE](model/LICENSE)。`provenance/` 和 `validation/` 保留历史来源及验证记录，其中旧文件名或摘要对应当时的版本。

@@ -1,0 +1,109 @@
+{"status": "quick_size_only_for_weights", "files": 124, "weight_hashes_skipped": 18, "bundle_manifest_sha256": "a62dca8a0af81044e63bf1e43ef71c04327a5ac3619b12f32a5c713f77a0d151", "at_utc": "2026-09-10T11:12:16.755933+00:00", "B200_execution_verified": false}
+Clean/attacked native prompt gate 1000/9600
+Clean/attacked native prompt gate 2000/9600
+Clean/attacked native prompt gate 3000/9600
+Clean/attacked native prompt gate 4000/9600
+Clean/attacked native prompt gate 5000/9600
+Clean/attacked native prompt gate 6000/9600
+Clean/attacked native prompt gate 7000/9600
+Clean/attacked native prompt gate 8000/9600
+Clean/attacked native prompt gate 9000/9600
+{"environment": {"vllm": "0.24.0", "transformers": "5.12.1", "torch": "2.11.0+cu130", "cuda": "13.0", "arch_flags": "sm_75 sm_80 sm_86 sm_90 sm_100 sm_120", "at_utc": "2026-09-10T11:12:18.418375+00:00", "peft": "0.20.0"}, "input_gate": {"status": "pass", "samples": 9600, "max_clean_prompt_tokens": 578, "student_equals_tminus": true, "teacher_plus_fields": ["user_query", "clean_context"], "label_filter": false, "clean_sft": false, "B200_forward_verified": false, "at_utc": "2026-09-10T11:12:33.379641+00:00"}}
+test_actual_hybrid_model_update_alignment_frozen_teacher_and_resume (__main__.CleanTeacherTests.test_actual_hybrid_model_update_alignment_frozen_teacher_and_resume) ... FAIL
+test_all_response_tokens_and_no_truncation (__main__.CleanTeacherTests.test_all_response_tokens_and_no_truncation) ... ok
+test_chunk_loss_and_gradient_match_full_vocab_reference (__main__.CleanTeacherTests.test_chunk_loss_and_gradient_match_full_vocab_reference) ... ok
+test_clean_view_ignores_gold_attack_and_labels (__main__.CleanTeacherTests.test_clean_view_ignores_gold_attack_and_labels) ... ok
+test_empty_clean_context_is_valid (__main__.CleanTeacherTests.test_empty_clean_context_is_valid) ... ok
+test_no_disagreement_yields_zero_not_sft (__main__.CleanTeacherTests.test_no_disagreement_yields_zero_not_sft) ... ok
+
+======================================================================
+FAIL: test_actual_hybrid_model_update_alignment_frozen_teacher_and_resume (__main__.CleanTeacherTests.test_actual_hybrid_model_update_alignment_frozen_teacher_and_resume)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/bundle/validation/test_clean_teacher_opcd.py", line 97, in test_actual_hybrid_model_update_alignment_frozen_teacher_and_resume
+    base = tiny_model()
+           ^^^^^^^^^^^^
+  File "/bundle/validation/test_clean_teacher_opcd.py", line 25, in tiny_model
+    from transformers import Qwen3_5Config, Qwen3_5ForConditionalGeneration
+  File "<frozen importlib._bootstrap>", line 1412, in _handle_fromlist
+  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/import_utils.py", line 2262, in __getattr__
+    module = self._get_module(self._class_to_module[name])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/import_utils.py", line 2496, in _get_module
+    raise e
+  File "/usr/local/lib/python3.12/dist-packages/transformers/utils/import_utils.py", line 2494, in _get_module
+    return importlib.import_module("." + module_name, self.__name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/transformers/models/qwen3_5/modeling_qwen3_5.py", line 37, in <module>
+    from ...modeling_layers import (
+  File "/usr/local/lib/python3.12/dist-packages/transformers/modeling_layers.py", line 27, in <module>
+    from .processing_utils import Unpack
+  File "/usr/local/lib/python3.12/dist-packages/transformers/processing_utils.py", line 83, in <module>
+    from .modeling_utils import PreTrainedAudioTokenizerBase
+  File "/usr/local/lib/python3.12/dist-packages/transformers/modeling_utils.py", line 69, in <module>
+    from .integrations.finegrained_fp8 import ALL_FP8_EXPERTS_FUNCTIONS
+  File "/usr/local/lib/python3.12/dist-packages/transformers/integrations/finegrained_fp8.py", line 30, in <module>
+    from .deepgemm import (
+  File "/usr/local/lib/python3.12/dist-packages/transformers/integrations/deepgemm.py", line 160, in <module>
+    @torch._dynamo.allow_in_graph
+     ^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/__init__.py", line 2879, in __getattr__
+    return importlib.import_module(f".{name}", __name__)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/importlib/__init__.py", line 90, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/_dynamo/__init__.py", line 13, in <module>
+    from . import (
+  File "/usr/local/lib/python3.12/dist-packages/torch/_dynamo/aot_compile.py", line 17, in <module>
+    from torch._dynamo.package import SystemInfo
+  File "/usr/local/lib/python3.12/dist-packages/torch/_dynamo/package.py", line 459, in <module>
+    @CacheArtifactFactory.register
+     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/compiler/_cache.py", line 74, in register
+    raise AssertionError(
+AssertionError: Artifact of type=precompile already registered in mega-cache artifact factory
+
+----------------------------------------------------------------------
+Ran 6 tests in 3.557s
+
+FAILED (failures=1)
+Traceback (most recent call last):
+  File "/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/training_launcher.py", line 108, in <module>
+    main()
+  File "/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/training_launcher.py", line 67, in main
+    subprocess.run(['docker', 'run', '--rm', '-e', 'NVIDIA_VISIBLE_DEVICES=void', '-e', 'CUDA_VISIBLE_DEVICES=',
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['docker', 'run', '--rm', '-e', 'NVIDIA_VISIBLE_DEVICES=void', '-e', 'CUDA_VISIBLE_DEVICES=', '--network', 'none', '--ipc', 'host', '--security-opt', 'label=disable', '--user', '1000:1000', '--entrypoint', 'python3', '-e', 'PYTHONDONTWRITEBYTECODE=1', '-e', 'HF_HUB_OFFLINE=1', '-e', 'TRANSFORMERS_OFFLINE=1', '-e', 'TOKENIZERS_PARALLELISM=false', '-e', 'HF_HOME=/tmp/opcd-hf', '-e', 'XDG_CACHE_HOME=/tmp/opcd-cache', '-e', 'VLLM_CACHE_ROOT=/tmp/opcd-vllm', '-e', 'OMP_NUM_THREADS=1', '-e', 'OPENBLAS_NUM_THREADS=1', '-e', 'VLLM_NO_USAGE_STATS=1', '-e', 'DO_NOT_TRACK=1', '-e', 'VLLM_ENABLE_CUDA_COMPATIBILITY=1', '--mount', 'type=bind,src=/home/data1/SHUAI/shuai-home-v2/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910,dst=/bundle,readonly', '--mount', 'type=bind,src=/home/data1/SHUAI/shuai-home-v2/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/output,dst=/bundle/output', '-e', 'OPCD_TEST_TMP=/bundle/output/setup/training_tests', 'opcd-clean-training:1d6f7ca4cadc6016', '-u', '-B', '/bundle/validation/test_clean_teacher_opcd.py']' returned non-zero exit status 1.
+{"status": "quick_size_only_for_weights", "files": 124, "weight_hashes_skipped": 18, "bundle_manifest_sha256": "e72b2b4b07afd8736236e06a8daf4686fb576abe675a30b729ec627eea3a01db", "at_utc": "2026-09-10T11:13:44.474608+00:00", "B200_execution_verified": false}
+Clean/attacked native prompt gate 1000/9600
+Clean/attacked native prompt gate 2000/9600
+Clean/attacked native prompt gate 3000/9600
+Clean/attacked native prompt gate 4000/9600
+Clean/attacked native prompt gate 5000/9600
+Clean/attacked native prompt gate 6000/9600
+Clean/attacked native prompt gate 7000/9600
+Clean/attacked native prompt gate 8000/9600
+Clean/attacked native prompt gate 9000/9600
+{"environment": {"vllm": "0.24.0", "transformers": "5.12.1", "torch": "2.11.0+cu130", "cuda": "13.0", "arch_flags": "sm_75 sm_80 sm_86 sm_90 sm_100 sm_120", "at_utc": "2026-09-10T11:13:46.158348+00:00", "peft": "0.20.0"}, "input_gate": {"status": "pass", "samples": 9600, "max_clean_prompt_tokens": 578, "student_equals_tminus": true, "teacher_plus_fields": ["user_query", "clean_context"], "label_filter": false, "clean_sft": false, "B200_forward_verified": false, "at_utc": "2026-09-10T11:14:01.366569+00:00"}}
+test_actual_hybrid_model_update_alignment_frozen_teacher_and_resume (__main__.CleanTeacherTests.test_actual_hybrid_model_update_alignment_frozen_teacher_and_resume) ... <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+<frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+ok
+test_all_response_tokens_and_no_truncation (__main__.CleanTeacherTests.test_all_response_tokens_and_no_truncation) ... ok
+test_bfloat16_hybrid_model_update (__main__.CleanTeacherTests.test_bfloat16_hybrid_model_update) ... ok
+test_chunk_loss_and_gradient_match_full_vocab_reference (__main__.CleanTeacherTests.test_chunk_loss_and_gradient_match_full_vocab_reference) ... ok
+test_clean_view_ignores_gold_attack_and_labels (__main__.CleanTeacherTests.test_clean_view_ignores_gold_attack_and_labels) ... ok
+test_empty_clean_context_is_valid (__main__.CleanTeacherTests.test_empty_clean_context_is_valid) ... ok
+test_no_disagreement_yields_zero_not_sft (__main__.CleanTeacherTests.test_no_disagreement_yields_zero_not_sft) ... ok
+test_simulated_generation_rejected_before_training (__main__.CleanTeacherTests.test_simulated_generation_rejected_before_training) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 5.646s
+
+OK
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

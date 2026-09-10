@@ -1,0 +1,69 @@
+{
+  "schema": "clean-teacher-training-engineering-verification-v1",
+  "status": "pass",
+  "at_utc": "2026-09-10T11:15:09.334972+00:00",
+  "environment": {
+    "vllm": "0.24.0",
+    "transformers": "5.12.1",
+    "torch": "2.11.0+cu130",
+    "cuda": "13.0",
+    "arch_flags": "sm_75 sm_80 sm_86 sm_90 sm_100 sm_120",
+    "at_utc": "2026-09-10T11:13:46.158348+00:00",
+    "peft": "0.20.0"
+  },
+  "input_gate": {
+    "status": "pass",
+    "samples": 9600,
+    "max_clean_prompt_tokens": 578,
+    "student_equals_tminus": true,
+    "teacher_plus_fields": [
+      "user_query",
+      "clean_context"
+    ],
+    "label_filter": false,
+    "clean_sft": false,
+    "B200_forward_verified": false,
+    "at_utc": "2026-09-10T11:14:01.366569+00:00"
+  },
+  "cpu_tests": {
+    "passed": 8,
+    "real_architecture": "random tiny Qwen3_5ForConditionalGeneration, linear_attention + full_attention",
+    "cases": [
+      "clean input independent of labels and gold",
+      "empty clean context accepted",
+      "same response and no truncation",
+      "chunked loss and gradients match numerical authority",
+      "zero disagreement gives zero OPCD not SFT",
+      "FP32 actual hybrid model update, frozen base/teacher, causal alignment, exact checkpoint resume and corrupted-checkpoint rejection",
+      "BF16 actual hybrid model update",
+      "simulation data refused before training"
+    ]
+  },
+  "docker": {
+    "base_pinned": true,
+    "extra_package": "peft==0.20.0",
+    "user": "1000:1000",
+    "network_during_check": "none",
+    "GPU_visibility": "void",
+    "build_context": "Dockerfile stdin only"
+  },
+  "negative_gpu_gate": {
+    "local_A100_refused": true,
+    "no_CUDA_allocation_or_GPU_job_started": true
+  },
+  "compatibility_fix": "Explicit output/ cache directories avoid torch._dynamo import failure for numeric Docker UID absent from passwd.",
+  "evidence_boundary": {
+    "full_27B_training_run": false,
+    "real_B200_run": false,
+    "GPU_throughput_measured": false,
+    "GPU_peak_memory_measured": false,
+    "model_quality_evaluated": false,
+    "no_paid_labels": true
+  },
+  "logs": {
+    "path": "output/logs/training_check.log",
+    "sha256": "d7acff044395ec102a25fdd9188101d86da65360b66a56800c101bd81d571c3a",
+    "contains_initial_failed_attempt_and_successful_rerun": true
+  },
+  "validation_notes": "18 original model weight sizes checked this turn; their SHA256 identities were verified in the earlier full bundle deployment audit. No 55 GB weight copy or inference was performed for this training addition."
+}
