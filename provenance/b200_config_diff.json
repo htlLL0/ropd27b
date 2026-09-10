@@ -1,0 +1,53 @@
+{
+  "changes": {
+    "schema": {
+      "source": "r-opcd-qwen38-aligned-collection-v1",
+      "b200": "r-opcd-qwen38-single-b200-collection-v1"
+    },
+    "created_at_utc": {
+      "source": "2026-09-10T07:00:36.315338+00:00",
+      "b200": "2026-09-10T07:26:02.924709+00:00"
+    },
+    "model_path": {
+      "source": "/home/shuai/AAAI 2027/safety_opcd_plan/emnlp2026main/SecOPD/models/Qwen3.8-27B-base-1d4bf0f2",
+      "b200": "model"
+    },
+    "model_source_manifest": {
+      "source": "/home/shuai/AAAI 2027/safety_opcd_plan/0820/R-OPCD-V3/artifacts/qwen38_model_switch_preflight_20260910/model_verification.json",
+      "b200": "provenance/source_model_verification.json"
+    },
+    "data_path": {
+      "source": "/home/shuai/AAAI 2027/safety_opcd_plan/0820/R-OPCD-V3/data/secopd_qwen36_27b_9600_roles_think_t1_16k_20260910",
+      "b200": "source_data"
+    },
+    "concurrency": {
+      "source": 8,
+      "b200": 16
+    },
+    "tensor_parallel_size": {
+      "source": 2,
+      "b200": 1
+    },
+    "physical_gpus": {
+      "source": [
+        2,
+        5,
+        3,
+        4
+      ],
+      "b200": "selected_single_B200"
+    },
+    "gpu_uuids": {
+      "source": [
+        "GPU-bcb6abe4-ce20-0560-6e2b-5293d870d621",
+        "GPU-40399571-f32c-533b-8fe9-f20adb8e2a28",
+        "GPU-33a2c10e-e29b-4f9b-8923-78e9315d44f4",
+        "GPU-a1f52d6e-cdbc-0f38-e24e-cedde6470163"
+      ],
+      "b200": "recorded_at_runtime"
+    }
+  },
+  "sampling_and_model_unchanged": true,
+  "total_concurrency_unchanged": 16,
+  "note": "Two TP2 replicas with 8 requests each become one TP1 replica with 16 requests. Exact sampled tokens can differ with numeric backend/topology."
+}

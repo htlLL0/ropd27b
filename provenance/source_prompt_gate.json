@@ -1,0 +1,16 @@
+{
+  "status": "pass",
+  "samples": 9600,
+  "student_token_ids_changed": 0,
+  "teacher_token_ids_changed": 0,
+  "max_student_prompt_tokens": 590,
+  "max_Tplus_prompt_tokens": 1069,
+  "counts": {
+    "straightforward_append": 4290,
+    "straightforward_prepend": 4350,
+    "completion": 960
+  },
+  "tplus_model_forward_verified": false,
+  "parent_source_preserved": true,
+  "at_utc": "2026-09-10T07:01:17.205123+00:00"
+}

@@ -1,0 +1,33 @@
+{
+  "status": "pass",
+  "parent_run": "/home/shuai/AAAI 2027/safety_opcd_plan/0820/R-OPCD-V3/artifacts/secopd_qwen36_27b_9600_roles_think_t1_16k_20260910",
+  "changed_config_fields": [
+    "created_at_utc",
+    "model_name",
+    "model_path",
+    "model_revision",
+    "model_source_manifest",
+    "schema",
+    "served_model_name"
+  ],
+  "permitted_config_fields": [
+    "created_at_utc",
+    "model_name",
+    "model_path",
+    "model_revision",
+    "model_source_manifest",
+    "schema",
+    "served_model_name"
+  ],
+  "source_sha256": "b19225ab1cf206a27fb56b85c187109b269c36c3bb9a2706d04425cac1212ff4",
+  "same_source_rows_order_lanes_positions_seeds": true,
+  "same_student_and_Tplus_rendered_text": true,
+  "same_request_fields_except_model_and_native_prompt_ids": true,
+  "same_canary_selection": true,
+  "no_reuse_of_parent_model_responses": true,
+  "samples": 9600,
+  "student_token_ids_changed": 0,
+  "teacher_token_ids_changed": 0,
+  "max_student_prompt_tokens": 590,
+  "max_Tplus_prompt_tokens": 1069
+}

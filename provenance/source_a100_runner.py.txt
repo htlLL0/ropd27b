@@ -1,0 +1,421 @@
+#!/usr/bin/env python3
+"""Isolated two-replica role-separated thinking collection, never training."""
+from __future__ import annotations
+
+import argparse
+from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from copy import deepcopy
+from datetime import datetime, timezone
+import fcntl
+import hashlib
+import json
+import os
+from pathlib import Path
+import shutil
+import signal
+import subprocess
+import sys
+import threading
+import time
+import urllib.request
+import xml.etree.ElementTree as ET
+
+# Resolve imports from this checkout (or its frozen runtime), never a different arm.
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'src'))
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from r_opcd.secopd_aligned_collection import (
+    ARM, make_record, make_request, reposition_source, smoke_indices, source_seed,
+    student_messages, teacher_messages, tokenize_messages,
+)
+from r_opcd.frontier_collection import canonical_sha256
+
+ROOT = Path('/home/shuai/AAAI 2027/safety_opcd_plan/0820/R-OPCD-V3')
+NAME = 'secopd_qwen38_27b_9600_roles_think_t1_16k_20260910'
+OUTPUT = ROOT / 'artifacts' / NAME
+DATA = ROOT / 'data/secopd_qwen36_27b_9600_roles_think_t1_16k_20260910'
+PARENT = ROOT / 'data/secopd_qwen36_27b_9600_20260909'
+OLD = ROOT / 'artifacts/secopd_qwen36_27b_9600_roles_think_t1_16k_20260910'
+SECOPD = ROOT.parents[1] / 'emnlp2026main/SecOPD'
+MODEL = SECOPD / 'models/Qwen3.8-27B-base-1d4bf0f2'
+LABEL = 'ropcd-q38-roles-think-16k-20260910'
+LANES = {
+    'gpu25': {'indices': [2, 5], 'uuids': ['GPU-bcb6abe4-ce20-0560-6e2b-5293d870d621', 'GPU-40399571-f32c-533b-8fe9-f20adb8e2a28']},
+    'gpu34': {'indices': [3, 4], 'uuids': ['GPU-33a2c10e-e29b-4f9b-8923-78e9315d44f4', 'GPU-a1f52d6e-cdbc-0f38-e24e-cedde6470163']},
+}
+
+
+def now():
+    return datetime.now(timezone.utc).isoformat()
+
+
+def read(path):
+    return json.loads(Path(path).read_text())
+
+
+def sha(path):
+    h = hashlib.sha256()
+    with Path(path).open('rb') as f:
+        for chunk in iter(lambda: f.read(8 * 1024 * 1024), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def save(path, value):
+    path = Path(path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(path.name + f'.{os.getpid()}.{threading.get_ident()}.tmp')
+    tmp.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n')
+    tmp.replace(path)
+
+
+def rows(path):
+    with Path(path).open() as f:
+        return [json.loads(s) for s in f if s.strip()]
+
+
+def emit(f, value):
+    f.write(json.dumps(value, ensure_ascii=False, separators=(',', ':')) + '\n')
+    f.flush()
+
+
+def command(*args, timeout=90):
+    return subprocess.check_output(args, text=True, stderr=subprocess.STDOUT, timeout=timeout).strip()
+
+
+def require(value, message):
+    if not value:
+        raise RuntimeError(message)
+
+
+def verify_frozen(output=OUTPUT, host=True):
+    manifest = read(output / 'manifest.json')
+    for path, digest in manifest['runtime_hashes'].items():
+        require(sha(output / 'runtime' / path) == digest, 'Frozen runtime changed: ' + path)
+    for path, digest in manifest['output_hashes'].items():
+        require(sha(output / path) == digest, 'Frozen output changed: ' + path)
+    if host:
+        for path, digest in manifest['protected_old_files'].items():
+            require(sha(path) == digest, 'Old artifact changed: ' + path)
+        for entry in manifest['model_file_stats']:
+            stat = (MODEL / entry['name']).stat()
+            require(stat.st_size == entry['size'] and stat.st_mtime_ns == entry['mtime_ns'],
+                    'Model asset changed since staging: ' + entry['name'])
+    return manifest
+
+
+def prepare():
+    from types import SimpleNamespace
+    from prepare_qwen38_model_only import prepare_model_only
+    prepare_model_only(SimpleNamespace(**globals()))
+
+
+def state(name):
+    return json.loads(command('docker', 'inspect', name, '--format', '{{json .State}}'))
+
+
+def capture(name):
+    with (OUTPUT/'receipts'/f'{name}.log').open('w') as f:
+        subprocess.run(['docker','logs','--tail','250',name], stdout=f, stderr=subprocess.STDOUT, timeout=30)
+
+
+def launch_container(name, cmd):
+    save(OUTPUT/'receipts'/f'{name}.command.json', cmd)
+    cid = command(*cmd, timeout=180)
+    identity = json.loads(command('docker','inspect',name))[0]
+    save(OUTPUT/'receipts'/f'{name}.identity.json', {k:identity[k] for k in ('Id','Image','Created','State')})
+    return {'name':name, 'id':cid}
+
+
+def server(lane, config):
+    from launch_secopd_qwen36_9600 import mount
+    gpus = LANES[lane]['uuids']
+    for gpu in gpus:
+        used = int(command('nvidia-smi','--id='+gpu,'--query-gpu=memory.used','--format=csv,noheader,nounits'))
+        require(used <= 128, f'GPU no longer idle: {gpu}, used={used} MiB')
+    name = LABEL+'-'+lane+'-server'
+    cmd = ['docker','run','-d','--name',name,'--restart','no','--label','research.scope='+LABEL,
+        '--network','none','--runtime','nvidia','--gpus','"device='+','.join(gpus)+'"',
+        '--ipc','host','--security-opt','label=disable',*mount(MODEL,'/model'),
+        '-e','HF_HUB_OFFLINE=1','-e','TRANSFORMERS_OFFLINE=1','-e','VLLM_NO_USAGE_STATS=1',
+        '-e','DO_NOT_TRACK=1','-e','VLLM_ENABLE_CUDA_COMPATIBILITY=1',config['image'],
+        '/model','--served-model-name',config['served_model_name'],'--host','127.0.0.1','--port','8000',
+        '--tensor-parallel-size','2','--dtype','bfloat16','--max-model-len','32768',
+        '--gpu-memory-utilization','0.90','--max-num-seqs','8','--max-num-batched-tokens','4096',
+        '--language-model-only','--enforce-eager','--disable-custom-all-reduce','--generation-config','vllm',
+        '--seed',str(config['seed'])]
+    receipt = launch_container(name, cmd)
+    identity = json.loads(command('docker','inspect',name))[0]
+    actual = identity['HostConfig']['DeviceRequests'][0]['DeviceIDs']
+    require(set(actual) == set(gpus), 'GPU assignment mismatch')
+    return receipt
+
+
+def start_worker(lane, phase, server_name, config):
+    from launch_secopd_qwen36_9600 import mount
+    name = LABEL+'-'+lane+'-'+phase
+    cmd = ['docker','run','-d','--name',name,'--restart','no','--label','research.scope='+LABEL,
+        '--network','container:'+server_name,'--user',f'{os.getuid()}:{os.getgid()}','--entrypoint','python3',
+        '-e','PYTHONDONTWRITEBYTECODE=1','-e','HF_HUB_OFFLINE=1','-e','TRANSFORMERS_OFFLINE=1',
+        '-e','CUDA_VISIBLE_DEVICES=','-e','OMP_NUM_THREADS=1','-e','OPENBLAS_NUM_THREADS=1',
+        '-e','TOKENIZERS_PARALLELISM=false','-e','PYTHONPATH=/runner/src:/runner/tools',
+        *mount(MODEL,'/model'),*mount(OUTPUT,'/output',writable=True),*mount(OUTPUT/'runtime','/runner'),
+        config['image'],'-u','-B','/runner/tools/run_secopd_qwen38_aligned_9600.py','worker',
+        '--output','/output','--lane',lane,'--phase',phase]
+    return launch_container(name,cmd)
+
+
+def worker(args):
+    output, lane, phase = args.output, args.lane, args.phase
+    verify_frozen(output, host=False)
+    config = read(output/'config.json')
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained('/model', local_files_only=True)
+    selection = set(read(output/'smoke_selection.json'))
+    items = [x for x in rows(output/'prepared.jsonl') if x['lane'] == lane
+             and ((x['index'] in selection) == (phase == 'smoke'))]
+    require(len(items) == (6 if phase == 'smoke' else 4794), 'Lane/phase ownership drift')
+    if phase == 'bulk':
+        require(read(output/'smoke_gate.json')['status']=='pass', 'Both canaries must pass before bulk')
+    destination = output/'lanes'/lane/phase
+    destination.mkdir(parents=True,exist_ok=False)
+    started = time.monotonic()
+    lock = threading.Lock()
+    failed = threading.Event()
+    signal.signal(signal.SIGUSR1, lambda *_: failed.set())
+    iterator = iter(items)
+    completed, inflight, errors = {}, set(), []
+
+    def progress(status):
+        counts = Counter(r['stop_reason'] for r in completed.values())
+        save(destination/'progress.json', {'status':status,'lane':lane,'phase':phase,
+             'completed':len(completed),'total':len(items),'in_flight':len(inflight),'counts':dict(counts),
+             'missing_think_end':sum(r['thinking_end_count']==0 for r in completed.values()),
+             'empty_final':sum(not r['final_answer'] for r in completed.values()),
+             'generated_tokens':sum(r['generated_tokens_including_terminal'] for r in completed.values()),
+             'elapsed_seconds':time.monotonic()-started,'updated_at_utc':now(),'errors':errors})
+
+    def consume():
+        while not failed.is_set():
+            with lock:
+                item = next(iterator,None)
+                if item is None:
+                    return
+                index = item['index']
+                require(item['lane']==lane,'Cross-lane request forbidden')
+                case = output/'cases'/f'{index:05d}'
+                case.mkdir(exist_ok=False)
+                inflight.add(index)
+                save(case/'execution.json', {'lane':lane,'phase':phase,'index':index,'started_at_utc':now(),
+                     'parent_source_id':item['source']['parent_source_id'],'source_id':item['source']['id']})
+                save(case/'request.json', {'messages':item['messages'],'body':item['request']})
+            before = time.monotonic()
+            try:
+                req = urllib.request.Request('http://127.0.0.1:8000/v1/completions',
+                    data=json.dumps(item['request']).encode(),headers={'Content-Type':'application/json'})
+                with urllib.request.urlopen(req,timeout=config['request_timeout_seconds']) as result:
+                    raw = json.load(result)
+                save(case/'raw_response.json',raw)
+                record = make_record(item,raw,config,tokenizer,time.monotonic()-before)
+                record['execution_provenance']={'lane':lane,'phase':phase,'physical_gpus':LANES[lane]['indices']}
+                save(case/'trajectory.json',record)
+                with lock:
+                    completed[index]=record
+                    inflight.remove(index)
+                    emit(journal, {'index':index,'source_id':record['source_id'],'tokens':len(record['response_token_ids']),
+                                   'stop_reason':record['stop_reason'],'at_utc':now()})
+                    progress('running')
+            except BaseException as exc:
+                failed.set()
+                save(case/'error.json',{'type':type(exc).__name__,'error':str(exc),'at_utc':now(),
+                                      'no_automatic_retry':True,'semantic_label':None})
+                with lock:
+                    inflight.discard(index)
+                    errors.append({'index':index,'error':str(exc)})
+                    progress('draining_error')
+                raise
+
+    with (destination/'completed.jsonl').open('x') as journal:
+        with ThreadPoolExecutor(max_workers=min(8,len(items))) as executor:
+            futures = [executor.submit(consume) for _ in range(min(8,len(items)))]
+            while not all(f.done() for f in futures):
+                with lock:
+                    progress('draining_error' if failed.is_set() else 'running')
+                time.sleep(10)
+            for future in futures:
+                future.result()
+    require(len(completed)==len(items) and not failed.is_set(),'Stopped before all assigned sources completed')
+    if phase=='smoke':
+        require(all(r['stop_reason']=='eos_token' and r['thinking_end_count']==1 and r['final_answer']
+                    for r in completed.values()), 'Canary has cap, malformed thinking boundary or empty final answer')
+    save(destination/'completion.json',{'status':'complete','count':len(completed),'indices':sorted(completed),'at_utc':now()})
+    progress('complete')
+
+
+def stop_owned(receipt):
+    ident = json.loads(command('docker','inspect',receipt['name']))[0]
+    require(ident['Id']==receipt['id'] and ident['Config']['Labels'].get('research.scope')==LABEL,
+            'Refuse to stop a container with changed ownership')
+    if ident['State']['Running']:
+        command('docker','stop','--timeout','30',receipt['name'],timeout=60)
+    capture(receipt['name'])
+    return state(receipt['name'])
+
+
+def overall_progress(stage, handles, started):
+    summaries = {}
+    for lane in LANES:
+        for phase in ('smoke','bulk'):
+            p = OUTPUT/'lanes'/lane/phase/'progress.json'
+            if p.exists():
+                summaries[lane+'/'+phase] = read(p)
+    completed=sum(x['completed'] for x in summaries.values())
+    elapsed=time.monotonic()-started
+    value={'stage':stage,'completed':completed,'total':9600,'updated_at_utc':now(),
+           'elapsed_seconds':elapsed,'lanes':summaries,'supervisor_pid':os.getpid(),
+           'in_flight':sum(x['in_flight'] for x in summaries.values()),'training_started':False,
+           'estimated_remaining_seconds': elapsed/completed*(9600-completed) if completed>=100 else None}
+    save(OUTPUT/'progress.json',value)
+    handles.update(stage=stage,updated_at_utc=now())
+    save(OUTPUT/'handles.json',handles)
+    return value
+
+
+def assemble(config):
+    counts=Counter()
+    seen=set()
+    with (OUTPUT/'generations.jsonl').open('x') as out:
+        for item in rows(OUTPUT/'prepared.jsonl'):
+            case=OUTPUT/'cases'/f"{item['index']:05d}"
+            record=read(case/'trajectory.json')
+            raw=read(case/'raw_response.json')
+            from collect_secopd_qwen36_9600 import parse_tokens
+            ids,reason=parse_tokens(raw,item['prompt']['prompt_token_ids'],config)
+            require(record['source_id']==item['source']['id'] and record['response_token_ids']==ids and
+                    record['stop_reason']==reason and record['source_id'] not in seen,'Final coverage/token audit failed')
+            require(record['generation_config_sha256']==canonical_sha256(config),'Generation config drift')
+            seen.add(record['source_id'])
+            counts[reason]+=1
+            counts['missing_think_end']+=record['thinking_end_count']==0
+            counts['empty_final']+=not bool(record['final_answer'])
+            emit(out,record)
+    require(len(seen)==9600,'Incomplete generation')
+    verify_frozen()
+    save(OUTPUT/'generation_summary.json',{'status':'complete','completed':9600,'counts':dict(counts),
+        'generations_sha256':sha(OUTPUT/'generations.jsonl'),'training_ready':False,'at_utc':now(),
+        'pending':['new_A_U_labels','cap_and_final_answer_disposition','new_format_training_integration',
+                   '27B_Tplus_forward_gate','new_reliability_calibration']})
+
+
+def supervise():
+    lock=(OUTPUT/'supervisor.lock').open('a')
+    fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    verify_frozen()
+    require(read(OUTPUT/'model_verification.json')['status']=='verified','Missing fresh model verification')
+    config=read(OUTPUT/'config.json')
+    handles={'servers':{},'workers':{},'scope':LABEL}
+    started=time.monotonic()
+    abort=False
+    def request_stop(*_):
+        nonlocal abort
+        abort=True
+    signal.signal(signal.SIGUSR1,request_stop)
+    try:
+        for lane in LANES:
+            handles['servers'][lane]=server(lane,config)
+            overall_progress('model_loading',handles,started)
+        loading=time.monotonic()
+        ready=set()
+        while len(ready)<2:
+            require(not abort,'User requested pause')
+            require(time.monotonic()-loading<1800,'Model health timeout')
+            for lane,receipt in handles['servers'].items():
+                require(state(receipt['name'])['Running'],'Server exited while loading: '+lane)
+                if lane in ready:
+                    continue
+                probe=subprocess.run(['docker','exec',receipt['name'],'python3','-c',
+                    "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5).read()"],
+                    stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=15)
+                if probe.returncode==0:
+                    ready.add(lane)
+            overall_progress('model_loading',handles,started)
+            if len(ready)<2:
+                time.sleep(15)
+        for phase in ('smoke','bulk'):
+            for lane,receipt in handles['servers'].items():
+                handles['workers'][lane]=start_worker(lane,phase,receipt['name'],config)
+            while True:
+                require(not abort,'User requested pause')
+                require(time.monotonic()-started<config['run_timeout_seconds'],'48-hour run timeout')
+                states={lane:state(r['name']) for lane,r in handles['workers'].items()}
+                for lane,st in states.items():
+                    require(st['Running'] or st['ExitCode']==0,'Worker failed: '+lane)
+                    require(state(handles['servers'][lane]['name'])['Running'],'Model server stopped: '+lane)
+                overall_progress(phase,handles,started)
+                for r in [*handles['servers'].values(),*handles['workers'].values()]:
+                    capture(r['name'])
+                if all(not st['Running'] for st in states.values()):
+                    break
+                time.sleep(15)
+            for lane in LANES:
+                require(read(OUTPUT/'lanes'/lane/phase/'completion.json')['status']=='complete','Missing lane completion')
+            if phase=='smoke':
+                save(OUTPUT/'smoke_gate.json',{'status':'pass','count':12,'lanes':list(LANES),'at_utc':now(),
+                     'counts_toward_full_generation':True,'not_A_U_evidence':True})
+        assemble(config)
+        handles['server_release']={lane:stop_owned(r) for lane,r in handles['servers'].items()}
+        overall_progress('generation_complete',handles,started)
+        save(OUTPUT/'completion.json',{'status':'complete','samples':9600,'servers_released':True,
+                                     'training_started':False,'at_utc':now()})
+    except BaseException as exc:
+        save(OUTPUT/'failure.json',{'error':type(exc).__name__+': '+str(exc),'at_utc':now(),'automatic_retry':False})
+        # Drain this run's workers before stopping only its owned GPU servers.
+        for receipt in handles['workers'].values():
+            if state(receipt['name'])['Running']:
+                command('docker','kill','--signal=SIGUSR1',receipt['name'])
+        drain=time.monotonic()
+        while any(state(r['name'])['Running'] for r in handles['workers'].values()):
+            overall_progress('draining_after_error',handles,started)
+            if time.monotonic()-drain>config['request_timeout_seconds']+60:
+                for receipt in handles['workers'].values():
+                    stop_owned(receipt)
+                break
+            time.sleep(15)
+        for receipt in handles['servers'].values():
+            stop_owned(receipt)
+        overall_progress('failed_or_paused',handles,started)
+        raise
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__)
+    p.add_argument('mode',choices=['prepare','start','supervise','worker','verify'])
+    p.add_argument('--output',type=Path,default=OUTPUT)
+    p.add_argument('--lane',choices=list(LANES))
+    p.add_argument('--phase',choices=['smoke','bulk'])
+    args=p.parse_args()
+    if args.mode=='prepare':
+        prepare()
+    elif args.mode=='worker':
+        worker(args)
+    elif args.mode=='supervise':
+        supervise()
+    elif args.mode=='verify':
+        verify_frozen()
+        print('Frozen inputs/runtime verified')
+    else:
+        verify_frozen()
+        require(read(OUTPUT/'model_verification.json')['status']=='verified','Model integrity gate missing')
+        require(not (OUTPUT/'supervisor.json').exists(),'No automatic restart or duplicate launch')
+        with (OUTPUT/'supervisor.log').open('x') as f:
+            child=subprocess.Popen([sys.executable,'-B',str(OUTPUT/'runtime/tools/run_secopd_qwen38_aligned_9600.py'),'supervise'],
+                cwd=ROOT,stdin=subprocess.DEVNULL,stdout=f,stderr=subprocess.STDOUT,start_new_session=True,
+                env={**os.environ,'PYTHONPATH':str(OUTPUT/'runtime/src')+':'+str(OUTPUT/'runtime/tools')})
+        save(OUTPUT/'supervisor.json',{'pid':child.pid,'started_at_utc':now(),'scope':LABEL,'lanes':LANES,
+             'stop_signal':'SIGUSR1 drains this run only','training_started':False})
+        print(json.dumps({'status':'started','pid':child.pid,'output':str(OUTPUT)}))
+
+
+if __name__=='__main__':
+    main()

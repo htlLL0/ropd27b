@@ -1,0 +1,5 @@
+# Matches the pinned vLLM Docker runtime used by the source collection.
+--extra-index-url https://download.pytorch.org/whl/cu130
+torch==2.11.0+cu130
+vllm==0.24.0
+transformers==5.12.1

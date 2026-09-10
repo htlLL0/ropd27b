@@ -1,0 +1,26 @@
+{
+  "status": "pass",
+  "arm": "secopd_roles_think_t1_16k_v1",
+  "parent_manifest_sha256": "42d6cd2810e64ff937be9b465049f780329293122bb00ed38fd3f09b01e2f9b7",
+  "source_sha256": "b19225ab1cf206a27fb56b85c187109b269c36c3bb9a2706d04425cac1212ff4",
+  "samples": 9600,
+  "counts": {
+    "straightforward_append": 4290,
+    "straightforward_prepend": 4350,
+    "completion": 960
+  },
+  "moved_straightforward": 4368,
+  "parent_split_overlap": {
+    "base_task_ids": 0,
+    "combined_clean_injection_union_groups": 0,
+    "injection_union_groups": 0,
+    "target_union_groups": 0
+  },
+  "new_replies_and_labels_required": true,
+  "same_task_injector_kind_and_references": true,
+  "source_files": {
+    "attack_candidates.jsonl": "b19225ab1cf206a27fb56b85c187109b269c36c3bb9a2706d04425cac1212ff4",
+    "parent_utility_controls.jsonl": "dc8c22b21e9b7ab6955c579bcefe51bb08ef2bfc8ac0619694a6f03dc8857c28",
+    "parent_dev_attack_candidates.jsonl": "43c27531718fa6980271e8f1033b5127ecd3342b3d40a97dfbc6e2494a893716"
+  }
+}

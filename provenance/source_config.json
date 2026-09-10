@@ -1,0 +1,74 @@
+{
+  "schema": "r-opcd-qwen38-aligned-collection-v1",
+  "created_at_utc": "2026-09-10T07:00:36.315338+00:00",
+  "model_name": "Qwen/Qwen3.8-27B",
+  "model_revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+  "model_path": "/home/shuai/AAAI 2027/safety_opcd_plan/emnlp2026main/SecOPD/models/Qwen3.8-27B-base-1d4bf0f2",
+  "served_model_name": "qwen38-27b-base",
+  "model_source_manifest": "/home/shuai/AAAI 2027/safety_opcd_plan/0820/R-OPCD-V3/artifacts/qwen38_model_switch_preflight_20260910/model_verification.json",
+  "data_path": "/home/shuai/AAAI 2027/safety_opcd_plan/0820/R-OPCD-V3/data/secopd_qwen36_27b_9600_roles_think_t1_16k_20260910",
+  "source_sha256": "b19225ab1cf206a27fb56b85c187109b269c36c3bb9a2706d04425cac1212ff4",
+  "source_manifest_sha256": null,
+  "samples": 9600,
+  "seed": 20260910,
+  "pairing_seed": 20260904,
+  "eos_token_ids": [
+    248046,
+    248044
+  ],
+  "enable_thinking": true,
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "backend_top_k": -1,
+  "max_new_tokens": 16384,
+  "max_model_len": 32768,
+  "concurrency": 8,
+  "request_timeout_seconds": 3600,
+  "tensor_parallel_size": 2,
+  "dtype": "bfloat16",
+  "physical_gpus": [
+    2,
+    5,
+    3,
+    4
+  ],
+  "gpu_uuids": [
+    "GPU-bcb6abe4-ce20-0560-6e2b-5293d870d621",
+    "GPU-40399571-f32c-533b-8fe9-f20adb8e2a28",
+    "GPU-33a2c10e-e29b-4f9b-8923-78e9315d44f4",
+    "GPU-a1f52d6e-cdbc-0f38-e24e-cedde6470163"
+  ],
+  "image": "vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064f86781b963bd814f",
+  "scope": "generation_only_no_training_no_new_paid_labels",
+  "source_cap_metadata_override": null,
+  "collection_arm": "secopd_roles_think_t1_16k_v1",
+  "parent_source_sha256": "5af1c49c5e18d83836f190cf57b85a73533ec08b7e1e2807c1e6e780df61a21a",
+  "position_seed": 20260910,
+  "min_p": 0.0,
+  "run_timeout_seconds": 172800,
+  "lanes": {
+    "gpu25": {
+      "indices": [
+        2,
+        5
+      ],
+      "uuids": [
+        "GPU-bcb6abe4-ce20-0560-6e2b-5293d870d621",
+        "GPU-40399571-f32c-533b-8fe9-f20adb8e2a28"
+      ]
+    },
+    "gpu34": {
+      "indices": [
+        3,
+        4
+      ],
+      "uuids": [
+        "GPU-33a2c10e-e29b-4f9b-8923-78e9315d44f4",
+        "GPU-a1f52d6e-cdbc-0f38-e24e-cedde6470163"
+      ]
+    }
+  },
+  "prompt_view": "secopd_user_input_thinking_v1",
+  "tplus": "existing q1/guard content; external role input; thinking enabled",
+  "position_policy": "conditional_50_50_straightforward_preserve_completion_and_pairing"
+}

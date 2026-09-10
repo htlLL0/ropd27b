@@ -1,0 +1,2 @@
+# Preserve portable shell scripts and the frozen package's LF text hashes.
+* text=auto eol=lf

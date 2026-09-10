@@ -1,0 +1,378 @@
+{
+  "status": "verified",
+  "model": "Qwen/Qwen3.8-27B",
+  "revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+  "model_path": "/home/shuai/AAAI 2027/safety_opcd_plan/emnlp2026main/SecOPD/models/Qwen3.8-27B-base-1d4bf0f2",
+  "started_at_utc": "2026-09-10T06:56:59.700372+00:00",
+  "finished_at_utc": "2026-09-10T06:59:27.822161+00:00",
+  "source_url": "https://huggingface.co/api/models/Qwen/Qwen3.8-27B/revision/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0?blobs=true",
+  "files": [
+    {
+      "name": ".gitattributes",
+      "sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
+      "size": 1570,
+      "mtime_ns": 1788937528932214687,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/.gitattributes",
+      "official_blob_id": "52373fe24473b1aa44333d318f578ae6bf04b49b",
+      "official_lfs": null
+    },
+    {
+      "name": "LICENSE",
+      "sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a",
+      "size": 11544,
+      "mtime_ns": 1788937528952214972,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/LICENSE",
+      "official_blob_id": "f938136e3adacfd92be087f6e113b5d6d97f678f",
+      "official_lfs": null
+    },
+    {
+      "name": "README.md",
+      "sha256": "57e4bdb258ee1a7d2635c5174ebd4e56abe392505cdb5f8bbb356b0dc4293641",
+      "size": 65012,
+      "mtime_ns": 1788937528948214915,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/README.md",
+      "official_blob_id": "bc8aa0e396cd029c21cd773cca21830d0ded28ec",
+      "official_lfs": null
+    },
+    {
+      "name": "chat_template.jinja",
+      "sha256": "c3cf9e34abf4f9e36c2d72165aa9c132d3e2a725b6c2586aaa3a8af9d7a81041",
+      "size": 8952,
+      "mtime_ns": 1788937528932214687,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/chat_template.jinja",
+      "official_blob_id": "c0c686f9c38d70d179fb7b5f5aa7530bc913dda3",
+      "official_lfs": null
+    },
+    {
+      "name": "config.json",
+      "sha256": "191e0af232104ed8b65258cf3fb2b842e288008baca7633c11b82a1ac7203aab",
+      "size": 4312,
+      "mtime_ns": 1788937529772226709,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/config.json",
+      "official_blob_id": "706cebd746c4b6f2b1d1f892630867acfdfd3df8",
+      "official_lfs": null
+    },
+    {
+      "name": "crc32.txt",
+      "sha256": "b42dd291f5f98b05807e458f5b47849969a9b3326acbf0c97d28b05826740b83",
+      "size": 238,
+      "mtime_ns": 1788937529832227567,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/crc32.txt",
+      "official_blob_id": "6de5ee6a0c6596744baee911af0a5cdcb8d99a1e",
+      "official_lfs": null
+    },
+    {
+      "name": "generation_config.json",
+      "sha256": "e70c136c1b78ddc1fb0905bac8e733a4dc448d4f852a5dd75143fffc70be550e",
+      "size": 202,
+      "mtime_ns": 1788937529792226995,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/generation_config.json",
+      "official_blob_id": "023756cfadf88e5bf69eefeee3e172f38c448d64",
+      "official_lfs": null
+    },
+    {
+      "name": "merges.txt",
+      "sha256": "a9d356d7bdf1ef4949e3e748e95b8e10ad9d4e2e838eddc38a0a7b6b94d1db8d",
+      "size": 3353259,
+      "mtime_ns": 1788937530808241536,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/merges.txt",
+      "official_blob_id": "a494e019ca1502219fd0128658b979e5f05ae8e8",
+      "official_lfs": null
+    },
+    {
+      "name": "model-00001-of-00018.safetensors",
+      "sha256": "ba0ce20aae489ad196733da5064bcdf159a1fe84f53336648196e1ebb7751b1c",
+      "size": 3966730552,
+      "mtime_ns": 1788937747523336597,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00001-of-00018.safetensors",
+      "official_blob_id": "79b73cdd69afeca931d181f5d1e21ad2d73bb7b7",
+      "official_lfs": {
+        "sha256": "ba0ce20aae489ad196733da5064bcdf159a1fe84f53336648196e1ebb7751b1c",
+        "size": 3966730552,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00002-of-00018.safetensors",
+      "sha256": "06a148c01bfbe3faa14a5f184a7ff29a706f7ae1c8b2705d2058e26d17a001fb",
+      "size": 3043080328,
+      "mtime_ns": 1788937727935057311,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00002-of-00018.safetensors",
+      "official_blob_id": "81cf43545884a227a01351942dfbc72577812316",
+      "official_lfs": {
+        "sha256": "06a148c01bfbe3faa14a5f184a7ff29a706f7ae1c8b2705d2058e26d17a001fb",
+        "size": 3043080328,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00003-of-00018.safetensors",
+      "sha256": "2e1bf62cbcd406eaa64b60d10353e1f0ef4039d0976e56f05cabe953454f9968",
+      "size": 2542796952,
+      "mtime_ns": 1788937721198961250,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00003-of-00018.safetensors",
+      "official_blob_id": "a2da5e6cd6307a6cae13d04820ab0d31b47b48bd",
+      "official_lfs": {
+        "sha256": "2e1bf62cbcd406eaa64b60d10353e1f0ef4039d0976e56f05cabe953454f9968",
+        "size": 2542796952,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00004-of-00018.safetensors",
+      "sha256": "511e34063187882659753c4d93f3859f93c019fd438d8813071921c81d9a3f1a",
+      "size": 3988973152,
+      "mtime_ns": 1788937739259218780,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00004-of-00018.safetensors",
+      "official_blob_id": "175ddab3f2488ad181f73d789d2d778cf6d4fca6",
+      "official_lfs": {
+        "sha256": "511e34063187882659753c4d93f3859f93c019fd438d8813071921c81d9a3f1a",
+        "size": 3988973152,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00005-of-00018.safetensors",
+      "sha256": "635cb53446dc74f219740fc59e18b774f877b803b9722e289ca62575a6efa701",
+      "size": 2099339864,
+      "mtime_ns": 1788937806976183793,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00005-of-00018.safetensors",
+      "official_blob_id": "64890208fdd563c3aac0c2f55f69948bcaa1a492",
+      "official_lfs": {
+        "sha256": "635cb53446dc74f219740fc59e18b774f877b803b9722e289ca62575a6efa701",
+        "size": 2099339864,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00006-of-00018.safetensors",
+      "sha256": "0bc5214fac607f0e6cc92eec3789d4b8559410ef9fce66621ba8158e8410dae0",
+      "size": 3979553696,
+      "mtime_ns": 1788937896061452050,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00006-of-00018.safetensors",
+      "official_blob_id": "3ae29b86e4c773babfe17124dbd10d54d37819ec",
+      "official_lfs": {
+        "sha256": "0bc5214fac607f0e6cc92eec3789d4b8559410ef9fce66621ba8158e8410dae0",
+        "size": 3979553696,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00007-of-00018.safetensors",
+      "sha256": "80b0c49033e9a0d5762562aa12f4acdb7f54da586f3d0110f28c48d91cf07892",
+      "size": 2108759344,
+      "mtime_ns": 1788937890081366956,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00007-of-00018.safetensors",
+      "official_blob_id": "b7e9c0f038884839f3dad38fef7e75ee3362c24f",
+      "official_lfs": {
+        "sha256": "80b0c49033e9a0d5762562aa12f4acdb7f54da586f3d0110f28c48d91cf07892",
+        "size": 2108759344,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00008-of-00018.safetensors",
+      "sha256": "7192c5b66185d3592927daabee1cc19e6f6e0ce75988ee20e824b624765fda79",
+      "size": 3979553696,
+      "mtime_ns": 1788937933305981903,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00008-of-00018.safetensors",
+      "official_blob_id": "0b58cbc52714e1c683711be87e7c2e33fb10e7a0",
+      "official_lfs": {
+        "sha256": "7192c5b66185d3592927daabee1cc19e6f6e0ce75988ee20e824b624765fda79",
+        "size": 3979553696,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00009-of-00018.safetensors",
+      "sha256": "af3c48cc37af44f3db6ae0579baf019180d48d9c527caa0a1f03ff85813a56d8",
+      "size": 2108759344,
+      "mtime_ns": 1788937914881719820,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00009-of-00018.safetensors",
+      "official_blob_id": "4fc0c6b28004d809225d0e115f30e9e11c2345dc",
+      "official_lfs": {
+        "sha256": "af3c48cc37af44f3db6ae0579baf019180d48d9c527caa0a1f03ff85813a56d8",
+        "size": 2108759344,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00010-of-00018.safetensors",
+      "sha256": "163490a76f3bea3a40855b7efc04ce6d27afaf1a34f0bbde495b9491f76457c9",
+      "size": 3979553696,
+      "mtime_ns": 1788938013999129206,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00010-of-00018.safetensors",
+      "official_blob_id": "9ec693a17c788084116c51b4f34632670df77612",
+      "official_lfs": {
+        "sha256": "163490a76f3bea3a40855b7efc04ce6d27afaf1a34f0bbde495b9491f76457c9",
+        "size": 3979553696,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00011-of-00018.safetensors",
+      "sha256": "5f3ae1b948aeee39da77aec558e8236cd65fe4d7cb7686a76bb007acc563c6d8",
+      "size": 2108759344,
+      "mtime_ns": 1788937982506681546,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00011-of-00018.safetensors",
+      "official_blob_id": "3c63baaed16d833432a919647af53ac76bb6b007",
+      "official_lfs": {
+        "sha256": "5f3ae1b948aeee39da77aec558e8236cd65fe4d7cb7686a76bb007acc563c6d8",
+        "size": 2108759344,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00012-of-00018.safetensors",
+      "sha256": "a3de1c7114677a8f5ac5c4892c90e8238ea5c1e2038c80e757dfc87c3902ca55",
+      "size": 3979553696,
+      "mtime_ns": 1788938477037700366,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00012-of-00018.safetensors",
+      "official_blob_id": "8568b440a4666ed1b4cda0b5d21496378304f326",
+      "official_lfs": {
+        "sha256": "a3de1c7114677a8f5ac5c4892c90e8238ea5c1e2038c80e757dfc87c3902ca55",
+        "size": 3979553696,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00013-of-00018.safetensors",
+      "sha256": "06ab79a41f74c9c5cb734816feb0c7fc364104b227165ee7391231e1155aa02a",
+      "size": 2108759344,
+      "mtime_ns": 1788938025699295491,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00013-of-00018.safetensors",
+      "official_blob_id": "724083995a2257194321a3d00b36fd7d4bb7348d",
+      "official_lfs": {
+        "sha256": "06ab79a41f74c9c5cb734816feb0c7fc364104b227165ee7391231e1155aa02a",
+        "size": 2108759344,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00014-of-00018.safetensors",
+      "sha256": "4138ed94603065ba884bbcadedb04d7718bb40117e85e6f5c6fc5b9c05b7a85b",
+      "size": 3979553696,
+      "mtime_ns": 1788939416066998622,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00014-of-00018.safetensors",
+      "official_blob_id": "a60b80b6510d7938d951fbddc76aaadd121c6268",
+      "official_lfs": {
+        "sha256": "4138ed94603065ba884bbcadedb04d7718bb40117e85e6f5c6fc5b9c05b7a85b",
+        "size": 3979553696,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00015-of-00018.safetensors",
+      "sha256": "69224e27b9de4e7dbf6fc936c6eaae08447bda3b80a6c31a871ab451173afd22",
+      "size": 2108759344,
+      "mtime_ns": 1788938525134382104,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00015-of-00018.safetensors",
+      "official_blob_id": "7d4c34f3d716e1a47acff2f576b65b41a3ec4f3f",
+      "official_lfs": {
+        "sha256": "69224e27b9de4e7dbf6fc936c6eaae08447bda3b80a6c31a871ab451173afd22",
+        "size": 2108759344,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00016-of-00018.safetensors",
+      "sha256": "73cb9a1089fb6155cb648609478d6633be8a5c7d9ca5a05bc8925ce8a553cefe",
+      "size": 3979564040,
+      "mtime_ns": 1788938528078423830,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00016-of-00018.safetensors",
+      "official_blob_id": "c67e3e42c9715298fa7f68c6b378bfb1d74290d0",
+      "official_lfs": {
+        "sha256": "73cb9a1089fb6155cb648609478d6633be8a5c7d9ca5a05bc8925ce8a553cefe",
+        "size": 3979564040,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00017-of-00018.safetensors",
+      "sha256": "beb51f01056142ac4984bd800507b0dd0fd18de57f8e9ef6ea41d1a3598983a8",
+      "size": 2108759344,
+      "mtime_ns": 1788938555210808363,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00017-of-00018.safetensors",
+      "official_blob_id": "23dd899179729a4370c655e2c2241cfdbe4ef4ba",
+      "official_lfs": {
+        "sha256": "beb51f01056142ac4984bd800507b0dd0fd18de57f8e9ef6ea41d1a3598983a8",
+        "size": 2108759344,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model-00018-of-00018.safetensors",
+      "sha256": "1d3479509e21494658f9b64d317f5ea8e55c4025d28c702d6c4d0b356ce8ea06",
+      "size": 3392197344,
+      "mtime_ns": 1788938607071543270,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model-00018-of-00018.safetensors",
+      "official_blob_id": "a92b4073fc6a58ffc9334ac63360fc8d9cc50d33",
+      "official_lfs": {
+        "sha256": "1d3479509e21494658f9b64d317f5ea8e55c4025d28c702d6c4d0b356ce8ea06",
+        "size": 3392197344,
+        "pointerSize": 135
+      }
+    },
+    {
+      "name": "model.safetensors.index.json",
+      "sha256": "77042094076611b69791a610065f28b7013b8c621795fa86ddccc8bac7d1b9df",
+      "size": 112216,
+      "mtime_ns": 1788938544050650199,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/model.safetensors.index.json",
+      "official_blob_id": "da35e3c564457dface7d138f0b6cac284ff8958c",
+      "official_lfs": null
+    },
+    {
+      "name": "preprocessor_config.json",
+      "sha256": "27225450ac9c6529872ee1924fcb0962ff5634834f817040f444118116f4e516",
+      "size": 390,
+      "mtime_ns": 1788938544914662445,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/preprocessor_config.json",
+      "official_blob_id": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64",
+      "official_lfs": null
+    },
+    {
+      "name": "tokenizer.json",
+      "sha256": "0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3",
+      "size": 12809320,
+      "mtime_ns": 1788938549098721742,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/tokenizer.json",
+      "official_blob_id": "9328ce9c41e80f6dd7bc2c66d8ae1fc93bf87440",
+      "official_lfs": {
+        "sha256": "0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3",
+        "size": 12809320,
+        "pointerSize": 133
+      }
+    },
+    {
+      "name": "tokenizer_config.json",
+      "sha256": "b11349aafa7cdc6a320767cf7ceb29ed82f7eda5d65e8e0819e76f0ce947bf27",
+      "size": 17928,
+      "mtime_ns": 1788938550098735914,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/tokenizer_config.json",
+      "official_blob_id": "5de744b3fca2129d7186979ae47c06be33903243",
+      "official_lfs": null
+    },
+    {
+      "name": "video_preprocessor_config.json",
+      "sha256": "7768af27c1fafa9cc9011c1dc20067e03f8915e03b63504550e11d5066986d13",
+      "size": 385,
+      "mtime_ns": 1788938550986748499,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/video_preprocessor_config.json",
+      "official_blob_id": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe",
+      "official_lfs": null
+    },
+    {
+      "name": "vocab.json",
+      "sha256": "ce99b4cb2983d118806ce0a8b777a35b093e2000a503ebde25853284c9dfa003",
+      "size": 6722759,
+      "mtime_ns": 1788938554206794134,
+      "source_cache": "/home/shuai/.cache/huggingface/hub/models--Qwen--Qwen3.8-27B/snapshots/1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0/vocab.json",
+      "official_blob_id": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176",
+      "official_lfs": null
+    }
+  ],
+  "bytes": 55586114863,
+  "cache_modified": false,
+  "staging": "hardlinks to verified immutable cache blobs"
+}

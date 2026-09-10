@@ -1,0 +1,42 @@
+# Large local assets. Preserve locally; distribute separately from the Git repo.
+/model/
+/inputs/*.jsonl
+/source_data/*.jsonl
+
+# All experiment outputs, runtime logs and caches.
+/output/
+/runs/
+/validation/
+*.log
+
+# Local Python environments and generated caches.
+/.venv/
+/venv/
+/env/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.egg-info/
+/build/
+/dist/
+
+# Local configuration and credentials.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Editor/OS files and local transfer archives.
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.tar
+*.tar.gz
+*.tgz
+*.zip
