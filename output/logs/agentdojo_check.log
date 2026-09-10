@@ -1,0 +1,88 @@
+{"status": "quick_size_only_for_weights", "files": 250, "weight_hashes_skipped": 18, "bundle_manifest_sha256": "905b0fdd8fdd0462dec767f6fa764203988c7a195d930fdce2d487a1fe8c3207", "at_utc": "2026-09-10T11:51:11.827655+00:00", "B200_execution_verified": false}
+{"environment": {"vllm": "0.24.0", "transformers": "5.12.1", "torch": "2.11.0+cu130", "cuda": "13.0", "arch_flags": "sm_75 sm_80 sm_86 sm_90 sm_100 sm_120", "at_utc": "2026-09-10T11:51:13.516619+00:00", "agentdojo": "0.1.30", "peft": "0.20.0", "openai": "2.44.0", "pydantic": "2.13.4", "google-cloud-bigtable": "2.31.0", "protobuf": "5.29.6"}, "protocol": {"status": "pass", "cases_per_model": 1081, "counts": {"benign": 97, "injection_utility": 35, "attacked": 949}, "models": ["base", "trained"], "unmodified_upstream_files": 110, "source_revision": "d3640b5b03a88eb44dad96852e1de1ef437d836e", "native_scorer": true, "model_evaluation": false}}
+test_adapter_merge_matches_unmerged_tiny_model (__main__.AgentDojoTests.test_adapter_merge_matches_unmerged_tiny_model) ... <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+<frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 138.21it/s]
+Loading weights:   0%|          | 0/49 [00:00<?, ?it/s]Loading weights: 100%|██████████| 49/49 [00:00<00:00, 4293.40it/s]
+ok
+test_complete_frozen_protocol (__main__.AgentDojoTests.test_complete_frozen_protocol) ... ok
+test_error_fallback_is_preserved_but_not_confirmed_asr (__main__.AgentDojoTests.test_error_fallback_is_preserved_but_not_confirmed_asr) ... ok
+test_failure_snapshot_contains_logs_and_preserves_status (__main__.AgentDojoTests.test_failure_snapshot_contains_logs_and_preserves_status) ... ok
+test_local_http_native_trace_and_model_pairing (__main__.AgentDojoTests.test_local_http_native_trace_and_model_pairing) ... ok
+test_real_native_ground_truth_scorers_four_suites (__main__.AgentDojoTests.test_real_native_ground_truth_scorers_four_suites) ... ok
+test_runner_preflight_failure_automatically_exports (__main__.AgentDojoTests.test_runner_preflight_failure_automatically_exports) ... ok
+test_control_count_tamper (test_txt_transfer.TransferTests.test_control_count_tamper) ... ok
+test_duplicate_part (test_txt_transfer.TransferTests.test_duplicate_part) ... ok
+test_missing_part (test_txt_transfer.TransferTests.test_missing_part) ... ok
+test_no_overwrite (test_txt_transfer.TransferTests.test_no_overwrite) ... ok
+test_swapped_part_content (test_txt_transfer.TransferTests.test_swapped_part_content) ... ok
+test_tampered_or_truncated_part (test_txt_transfer.TransferTests.test_tampered_or_truncated_part) ... ok
+test_unicode_binary_and_empty_round_trip (test_txt_transfer.TransferTests.test_unicode_binary_and_empty_round_trip) ... ok
+test_unsafe_file_path (test_txt_transfer.TransferTests.test_unsafe_file_path) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 21.368s
+
+OK
+{"status": "quick_size_only_for_weights", "files": 250, "weight_hashes_skipped": 18, "bundle_manifest_sha256": "b58ad7d3552987a8c779ae7a004efd6ff3973ca76cc411d4699c8fc1cfad9a03", "at_utc": "2026-09-10T11:53:23.045857+00:00", "B200_execution_verified": false}
+{"environment": {"vllm": "0.24.0", "transformers": "5.12.1", "torch": "2.11.0+cu130", "cuda": "13.0", "arch_flags": "sm_75 sm_80 sm_86 sm_90 sm_100 sm_120", "at_utc": "2026-09-10T11:53:24.665925+00:00", "agentdojo": "0.1.30", "peft": "0.20.0", "openai": "2.44.0", "pydantic": "2.13.4", "google-cloud-bigtable": "2.31.0", "protobuf": "5.29.6"}, "protocol": {"status": "pass", "cases_per_model": 1081, "counts": {"benign": 97, "injection_utility": 35, "attacked": 949}, "models": ["base", "trained"], "unmodified_upstream_files": 110, "source_revision": "d3640b5b03a88eb44dad96852e1de1ef437d836e", "native_scorer": true, "model_evaluation": false}}
+test_adapter_merge_matches_unmerged_tiny_model (__main__.AgentDojoTests.test_adapter_merge_matches_unmerged_tiny_model) ... <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+<frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 128.34it/s]
+Loading weights:   0%|          | 0/49 [00:00<?, ?it/s]Loading weights: 100%|██████████| 49/49 [00:00<00:00, 4761.84it/s]
+ok
+test_complete_frozen_protocol (__main__.AgentDojoTests.test_complete_frozen_protocol) ... ok
+test_error_fallback_is_preserved_but_not_confirmed_asr (__main__.AgentDojoTests.test_error_fallback_is_preserved_but_not_confirmed_asr) ... ok
+test_failure_snapshot_contains_logs_and_preserves_status (__main__.AgentDojoTests.test_failure_snapshot_contains_logs_and_preserves_status) ... ok
+test_local_http_native_trace_and_model_pairing (__main__.AgentDojoTests.test_local_http_native_trace_and_model_pairing) ... ok
+test_real_native_ground_truth_scorers_four_suites (__main__.AgentDojoTests.test_real_native_ground_truth_scorers_four_suites) ... ok
+test_runner_preflight_failure_automatically_exports (__main__.AgentDojoTests.test_runner_preflight_failure_automatically_exports) ... ok
+test_control_count_tamper (test_txt_transfer.TransferTests.test_control_count_tamper) ... ok
+test_duplicate_part (test_txt_transfer.TransferTests.test_duplicate_part) ... ok
+test_missing_part (test_txt_transfer.TransferTests.test_missing_part) ... ok
+test_no_overwrite (test_txt_transfer.TransferTests.test_no_overwrite) ... ok
+test_swapped_part_content (test_txt_transfer.TransferTests.test_swapped_part_content) ... ok
+test_tampered_or_truncated_part (test_txt_transfer.TransferTests.test_tampered_or_truncated_part) ... ok
+test_unicode_binary_and_empty_round_trip (test_txt_transfer.TransferTests.test_unicode_binary_and_empty_round_trip) ... ok
+test_unsafe_file_path (test_txt_transfer.TransferTests.test_unsafe_file_path) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 18.020s
+
+OK
+{"status": "quick_size_only_for_weights", "files": 250, "weight_hashes_skipped": 18, "bundle_manifest_sha256": "99c4163961d32fb4e4568ea80ccca353eee534d2d9ea0ec7390f5a942ad9fae2", "at_utc": "2026-09-10T11:55:16.011701+00:00", "B200_execution_verified": false}
+{"environment": {"vllm": "0.24.0", "transformers": "5.12.1", "torch": "2.11.0+cu130", "cuda": "13.0", "arch_flags": "sm_75 sm_80 sm_86 sm_90 sm_100 sm_120", "at_utc": "2026-09-10T11:55:17.593983+00:00", "agentdojo": "0.1.30", "peft": "0.20.0", "openai": "2.44.0", "pydantic": "2.13.4", "google-cloud-bigtable": "2.31.0", "protobuf": "5.29.6"}, "protocol": {"status": "pass", "cases_per_model": 1081, "counts": {"benign": 97, "injection_utility": 35, "attacked": 949}, "models": ["base", "trained"], "unmodified_upstream_files": 110, "source_revision": "d3640b5b03a88eb44dad96852e1de1ef437d836e", "native_scorer": true, "model_evaluation": false}}
+test_adapter_merge_matches_unmerged_tiny_model (__main__.AgentDojoTests.test_adapter_merge_matches_unmerged_tiny_model) ... <frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+<frozen importlib._bootstrap>:488: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+/usr/local/lib/python3.12/dist-packages/torch/jit/_script.py:365: DeprecationWarning: `torch.jit.script_method` is deprecated. Please switch to `torch.compile` or `torch.export`.
+  warnings.warn(
+[transformers] The fast path is not available because one of the required library is not installed. Falling back to torch implementation. To install follow https://github.com/fla-org/flash-linear-attention#installation and https://github.com/Dao-AILab/causal-conv1d
+Writing model shards:   0%|          | 0/1 [00:00<?, ?it/s]Writing model shards: 100%|██████████| 1/1 [00:00<00:00, 141.02it/s]
+Loading weights:   0%|          | 0/49 [00:00<?, ?it/s]Loading weights: 100%|██████████| 49/49 [00:00<00:00, 4409.00it/s]
+ok
+test_complete_frozen_protocol (__main__.AgentDojoTests.test_complete_frozen_protocol) ... ok
+test_error_fallback_is_preserved_but_not_confirmed_asr (__main__.AgentDojoTests.test_error_fallback_is_preserved_but_not_confirmed_asr) ... ok
+test_failure_snapshot_contains_logs_and_preserves_status (__main__.AgentDojoTests.test_failure_snapshot_contains_logs_and_preserves_status) ... ok
+test_local_http_native_trace_and_model_pairing (__main__.AgentDojoTests.test_local_http_native_trace_and_model_pairing) ... ok
+test_real_native_ground_truth_scorers_four_suites (__main__.AgentDojoTests.test_real_native_ground_truth_scorers_four_suites) ... ok
+test_runner_preflight_failure_automatically_exports (__main__.AgentDojoTests.test_runner_preflight_failure_automatically_exports) ... ok
+test_vllm_server_import_as_numeric_docker_user (__main__.AgentDojoTests.test_vllm_server_import_as_numeric_docker_user) ... <frozen abc>:117: ResourceWarning: unclosed file <_io.TextIOWrapper name='/bundle/output/setup/agentdojo_tests/tmpij91c_qi/output/eval_failure/evaluation.lock' mode='a' encoding='utf-8'>
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+W0910 11:55:51.642000 1 torch/utils/cpp_extension.py:140] No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda'
+ok
+test_control_count_tamper (test_txt_transfer.TransferTests.test_control_count_tamper) ... ok
+test_duplicate_part (test_txt_transfer.TransferTests.test_duplicate_part) ... ok
+test_missing_part (test_txt_transfer.TransferTests.test_missing_part) ... ok
+test_no_overwrite (test_txt_transfer.TransferTests.test_no_overwrite) ... ok
+test_swapped_part_content (test_txt_transfer.TransferTests.test_swapped_part_content) ... ok
+test_tampered_or_truncated_part (test_txt_transfer.TransferTests.test_tampered_or_truncated_part) ... ok
+test_unicode_binary_and_empty_round_trip (test_txt_transfer.TransferTests.test_unicode_binary_and_empty_round_trip) ... ok
+test_unsafe_file_path (test_txt_transfer.TransferTests.test_unsafe_file_path) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 21.853s
+
+OK
+sys:1: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

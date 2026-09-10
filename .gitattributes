@@ -1,5 +1,7 @@
 # Preserve portable shell scripts and the frozen package's LF text hashes.
 * text=auto eol=lf
+/third_party/** -text
+/code/vendor/** -text
 
 # Frozen assets must retain their original bytes across platforms.
 /inputs/** -text

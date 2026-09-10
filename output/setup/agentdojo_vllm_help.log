@@ -1,0 +1,28 @@
+W0910 11:54:43.912000 1 torch/utils/cpp_extension.py:140] No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda'
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "<frozen runpy>", line 229, in run_module
+  File "<frozen runpy>", line 88, in _run_code
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/openai/api_server.py", line 699, in <module>
+    parser = make_arg_parser(parser)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/entrypoints/openai/cli_args.py", line 382, in make_arg_parser
+    parser = AsyncEngineArgs.add_cli_args(parser)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py", line 2675, in add_cli_args
+    parser = EngineArgs.add_cli_args(parser)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py", line 1488, in add_cli_args
+    vllm_kwargs = get_kwargs(VllmConfig)
+                  ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py", line 410, in get_kwargs
+    return copy.deepcopy(_compute_kwargs(cls))
+                         ^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/vllm/engine/arg_utils.py", line 311, in _compute_kwargs
+    default = default.default_factory()  # type: ignore[call-arg]
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/pydantic/_internal/_dataclasses.py", line 121, in __init__
+    s.__pydantic_validator__.validate_python(ArgsKwargs(args, kwargs), self_instance=s)
+  File "/usr/local/lib/python3.12/dist-packages/vllm/config/device.py", line 56, in __post_init__
+    raise RuntimeError(
+RuntimeError: Failed to infer device type, please set the environment variable `VLLM_LOGGING_LEVEL=DEBUG` to turn on verbose logging to help debug the issue.

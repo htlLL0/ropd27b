@@ -24,6 +24,8 @@ def mount_args(writable_output=True):
 def base_args(writable_output=True):
     return ['--network', 'none', '--ipc', 'host', '--security-opt', 'label=disable',
             '--user', f'{os.getuid()}:{os.getgid()}', '--entrypoint', 'python3',
+            # Numeric host UIDs need a name for PyTorch/vLLM getpass-based caches.
+            '-e', 'USER=opcd', '-e', 'LOGNAME=opcd',
             '-e', 'PYTHONDONTWRITEBYTECODE=1', '-e', 'HF_HUB_OFFLINE=1',
             '-e', 'TRANSFORMERS_OFFLINE=1', '-e', 'TOKENIZERS_PARALLELISM=false',
             '-e', 'HF_HOME=/tmp/opcd-hf', '-e', 'XDG_CACHE_HOME=/tmp/opcd-cache',

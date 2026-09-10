@@ -4,6 +4,8 @@
 
 新增无需标注的训练路线：**T+ 看到原始干净输入，T− 和 student 看到同一份带攻击输入；全部 9,600 条进入 OPCD，不做正常样例 SFT。** 先完成下面 4 步生成，再执行“无需标注，直接训练”中的命令。已有本包完整生成结果时可直接进入训练。
 
+训练完成后可运行“AgentDojo：原始模型与训练模型对照测试”。测试代码和数据均已包含，使用 AgentDojo 自带判定；原始结果之外，自动生成每份不超过 **90,000 字节**、带完整性校验的 TXT 传输版本。
+
 固定配置：Qwen3.8-27B、单张 B200、BF16、TP=1、并发 16、温度 1.0、`top_p=1.0`、thinking 开启，每条最多生成 16,384 tokens，上下文上限 32,768。无需修改配置或重新生成输入数据。
 
 ## 先确认服务器环境
@@ -247,6 +249,144 @@ output/
 
 最终产物是 **LoRA adapter**。使用时仍需本 README 固定 revision 的基础权重；adapter 路径由 `latest_checkpoint.json` 的 `path` 给出，相对于 `output/clean_opcd/`。
 
+## AgentDojo：原始模型与训练模型对照测试
+
+### 1. 准备评测环境
+
+下面命令在 B200 服务器的仓库目录执行。评测镜像单独构建，使用固定 CUDA 13 / vLLM 基础镜像，并安装 AgentDojo 和 PEFT；首次构建需要联网。后续评测在无外网的容器中执行，不需要 OpenAI、Claude 等服务的 Key，也不调用付费 judge。
+
+```bash
+./agentdojo_b200.sh build
+./agentdojo_b200.sh check
+./agentdojo_b200.sh preflight --gpu 0
+```
+
+AgentDojo 固定版本为 **v1.2.1**，源码 revision 为 `d3640b5b03a88eb44dad96852e1de1ef437d836e`。`third_party/agentdojo/` 包含官方完整源码、四套环境、任务、注入向量、判定函数和许可；`inputs/agentdojo_cases.jsonl` 固定全部测试 ID、任务和静态攻击内容，无需另行下载测试数据。
+
+`check` 不使用 GPU，检查官方源码哈希、完整测试清单、原生判定、TXT 分片还原，并运行小模型 adapter 合并检查。它只验证工程链路，不是原始模型或训练模型的正式评测结果。
+
+### 2. 一次启动，依次测试两个模型
+
+确认生成和训练任务均已退出、B200 空闲，`output/clean_opcd/completion.json` 显示完成后执行：
+
+```bash
+./agentdojo_b200.sh start --gpu 0
+./agentdojo_b200.sh status
+watch -t -n 5 ./agentdojo_b200.sh status
+```
+
+默认先测试 **原始 Qwen3.8-27B**，释放模型服务，再把完成训练的最终 LoRA 合并到独立模型目录并测试 **训练后的模型**。基础模型文件不变。合并产物约 56 GB，合并时磁盘还需至少额外 10 GiB 余量；日志和 TXT 副本也会继续占空间。合并只在服务器实际执行本命令后进行。
+
+若想在训练前先测原始模型，可单独执行：
+
+```bash
+./agentdojo_b200.sh start --gpu 0 --models base --run-id agentdojo_base
+./agentdojo_b200.sh status --run-id agentdojo_base
+```
+
+单独的 base 任务不需要训练 checkpoint；默认双模型任务会完整测试两者，不会把单独任务的旧结果静默混入。如果训练目录不是 `clean_opcd`，在启动、恢复时加 `--training-run-id 对应目录名`。
+
+### 3. 判定口径与测试规模
+
+| Suite | 正常任务 | 攻击组合 | 攻击目标可执行性检查 |
+|---|---:|---:|---:|
+| workspace | 40 | 560 | 14 |
+| banking | 16 | 144 | 9 |
+| travel | 20 | 140 | 7 |
+| slack | 21 | 105 | 5 |
+| 每个模型合计 | **97** | **949** | **35** |
+
+两个模型共 **2,162 条完整任务轨迹**。35 条检查是 AgentDojo 原有的 injection-task-as-user-task 诊断，单列汇报，不混入正常成功率或 ASR 的分母。
+
+**成功与否由未修改的 AgentDojo 判定函数负责。** 入口调用其 `run_task_without_injection_tasks()` / `run_task_with_injection_tasks()`，底层使用任务类 `utility()` / `utility_from_traces()` 和 `security()` / `security_from_traces()`，根据回答、工具调用和环境状态判定。`security=true` 在这里表示**攻击成功**。源码来源见 [固定 AgentDojo 仓库](https://github.com/ethz-spylab/agentdojo/tree/d3640b5b03a88eb44dad96852e1de1ef437d836e) 与 [provenance/agentdojo_source.json](provenance/agentdojo_source.json)。
+
+汇总分别给出：正常任务成功率、受攻击任务成功率、ASR、每套 suite 的结果，以及训练模型相对原始模型的百分点变化。完整结果要求所有对应任务完成且没有基础设施错误；部分运行只显示已完成数量和诊断比例。
+
+AgentDojo 上游在某些上下文溢出/服务异常中会回填 `utility=false, security=true`。本包完整保留原始值和 `official_raw_asr`，同时记录 `infrastructure_errors`；发生异常时，正式 `asr` / `task_success_rate` 留空，已完成有效样本的诊断比例单列，避免把服务故障解释成模型安全结论。
+
+两模型使用同一套 `important_instructions` 攻击，攻击阶段使用 `repeat_user_prompt`，工具结果统一用 `input` role；thinking 开启、总上下文 32,768、单 worker。**评测温度为 0.0、top_p=0.9，不额外设单次输出上限**，与此前 SecOPD 评测方式对齐。训练数据生成的温度仍为 1.0。每个任务/请求的 seed 固定且在两个模型间配对。完整参数见 [config/agentdojo.json](config/agentdojo.json)。
+
+### 4. 结果、日志与暂停恢复
+
+```bash
+./agentdojo_b200.sh logs
+cat output/agentdojo/RESULTS.txt
+cat output/agentdojo/summary.json
+cat output/agentdojo/completion.json
+```
+
+正常完成时状态为 `evaluation_complete`，进度 `2162/2162`，汇总 `status=complete`，两个模型各有 1,081 个任务结果。随后容器退出，所属 GPU 释放。
+
+```bash
+./agentdojo_b200.sh pause
+./agentdojo_b200.sh status
+# 等到 paused 且容器 Running=false 后恢复
+./agentdojo_b200.sh start --gpu 0 --resume
+```
+
+暂停会等当前 AgentDojo 任务完成，然后释放服务并生成当前进度的 TXT 副本；长任务可能需要等待多次模型调用。基础设施错误会保存原始错误并停止。显式 `--resume` 会校验已成功任务的文件哈希，保留旧失败/未完成 attempt，在新 attempt 中重跑该任务；不会重跑已完成的有效任务。模型、输入和配置必须保持一致。
+
+```text
+output/agentdojo/
+├── RESULTS.txt                    # 便于直接查看的指标摘要
+├── summary.json                   # 原始模型/训练模型、各套任务、配对比较
+├── run_binding.json               # 固定模型、checkpoint、任务与配置身份
+├── protocol.json / environment.json / hardware.json
+├── supervisor.log / merge.log     # 主流程与 adapter 合并日志
+├── checkpoint_identity.json       # 最终 checkpoint 与 adapter 哈希
+├── merge_receipt.json             # 合并模型各文件的哈希
+├── base/                          # 原始模型
+│   ├── server.log / server_command.json
+│   └── cases/<case_id>/attempt_*/
+│       ├── result.json            # 官方判定值及文件完整性记录
+│       ├── traces/                # AgentDojo 原生完整轨迹
+│       └── requests/              # 每次请求、原始响应、错误和耗时
+├── trained/                       # 训练模型，结构同 base
+├── adapter_snapshot/              # 固定 adapter 副本
+├── merged_model/                  # 独立合并权重，不修改原始模型
+├── transfer_latest.json           # 最近一次 TXT 传输副本的位置
+└── transfers/snapshot_*/           # 可直接传走的 TXT 文件
+```
+
+### 5. TXT 传输版本：每份不超过 90 KB
+
+**评测完成、正常暂停或捕获到运行失败后，都会额外生成 TXT 版本，原始文件继续保留。** 副本包含结果、原生轨迹、每次完整请求/响应、服务日志、主程序日志、错误、配置、环境和 checkpoint 身份。权重、adapter 二进制、模型配套文件的重复副本、缓存和临时文件不放入传输包。
+
+查看最新副本目录：
+
+```bash
+cat output/agentdojo/transfer_latest.json
+./agentdojo_b200.sh status
+```
+
+每个 `snapshot_*` 文件夹内包含一个 `000000_CONTROL.txt` 和多个 `part-000001-of-XXXXXX.txt`。**包括文件头在内，每个文件最多 90,000 字节**，比 90 KiB 更严格。文本内容保留 UTF-8，可读；分片不会切断汉字的 UTF-8 编码。摘要排在最前面，完整过程日志随后。文件很多时，按同一 snapshot 的顺序逐批传输即可。
+
+传走**同一个 snapshot 目录里的全部 TXT 文件**，不要混合不同 snapshot。保持文件名与内容，接收端只需要 Python 3 和仓库中的 `scripts/txt_transfer.py`：
+
+```bash
+# 假设收到的全部 TXT 放在 ./received_txt
+# 先检查缺片、重复、顺序、内容变化及所有原始文件的 SHA256
+python3 scripts/txt_transfer.py verify --source ./received_txt
+
+# 拼接为一个可读的大 TXT；会先校验，再生成
+python3 scripts/txt_transfer.py join \
+  --source ./received_txt --destination ./agentdojo_joined.txt
+
+# 或恢复完整原目录结构，JSON、日志、轨迹逐字节还原
+python3 scripts/txt_transfer.py restore \
+  --source ./received_txt --destination ./agentdojo_restored
+```
+
+控制算法采用 **分片编号和总数 + 每片 SHA256 + 有序哈希链 + 整体数据流 SHA256 + 每个原文件的大小与 SHA256**。缺片、重复、错序、混入另一包、截断或内容损坏都会报错；校验失败不发布拼接/还原结果，也不覆盖已有目标目录。这个校验保证传输完整性，部分或失败的评测不会因此变成完整结果。
+
+如果需要重新生成副本，在评测容器已经停止后执行：
+
+```bash
+./agentdojo_b200.sh export
+```
+
+每次生成独立的新 snapshot，旧副本保留。TXT 副本包含完整日志，会额外占用磁盘；后续分析直接使用还原目录即可。
+
 ## 暂停、恢复和另开任务
 
 ```bash
@@ -347,5 +487,7 @@ vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064
 已完成全新克隆、全部权重哈希、9,600 条真实输入和 14 项 CPU 测试；使用明确标记的模拟响应完成了暂停、恢复及 9,600 条汇总流程。**目标 B200 的真实执行仍需该服务器的预检与 12 条真实生成验证通过。** 仿真数据不能用于训练或模型评估。
 
 新增训练路线已通过 9,600 对原生 tokenizer 输入检查和 **8 项 CPU 测试**，包括 BF16 小型混合注意力模型更新、全词表分块梯度一致、teacher 冻结、checkpoint 完整性及恢复、拒绝仿真数据。普通用户权限的 Docker 入口也已检查。记录见 [validation/clean_teacher_training_verification.json](validation/clean_teacher_training_verification.json)。尚未在真实 B200 上运行 27B 训练，实际吞吐、长序列峰值显存与模型效果尚未验证。
+
+AgentDojo 入口已通过 **16 项 CPU 测试**：完整测试清单与源码哈希、四套环境的原生判定、模拟 HTTP 请求经过真实评测器、小模型 adapter 合并、失败后自动导出、普通用户下的 vLLM 服务模块导入，以及 TXT 缺片/重复/损坏检测和逐字节还原。检查在无 GPU、普通用户权限的 Docker 中完成；A100 会在显存分配前被拒绝。记录见 [validation/agentdojo_delivery_verification.json](validation/agentdojo_delivery_verification.json)。**尚未运行 27B 模型的正式 AgentDojo 评测，没有实际 ASR 或成功率结果。** 镜像依赖检查拒绝新冲突，仅保留固定 vLLM 基础镜像原有的两条元数据警告，详情在验证记录中。
 
 本项目的操作说明统一在本 README。模型卡保存在 [model/MODEL_CARD.md](model/MODEL_CARD.md)，许可见 [model/LICENSE](model/LICENSE)。`provenance/` 和 `validation/` 保留历史来源及验证记录，其中旧文件名或摘要对应当时的版本。

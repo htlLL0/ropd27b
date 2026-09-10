@@ -1,0 +1,8 @@
+{
+  "status": "pass",
+  "expected_rejection": "B200 required; selected GPU is NVIDIA A100-SXM4-80GB",
+  "gpu_allocation": false,
+  "exit_code": 1,
+  "stdout": "Traceback (most recent call last):\n  File \"/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/agentdojo_launcher.py\", line 119, in <module>\n    main()\n  File \"/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/agentdojo_launcher.py\", line 84, in main\n    gpu = core.select_gpu(args.gpu)\n  File \"/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py\", line 155, in select_gpu\n    row = validate_gpu_row({'uuid': parts[0], 'name': parts[1], 'memory_total_mib': int(parts[2]),\n  File \"/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py\", line 141, in validate_gpu_row\n    require('B200' in row['name'], 'B200 required; selected GPU is ' + row['name'])\n  File \"/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/b200_collection.py\", line 35, in require\n    raise RuntimeError(message)\nRuntimeError: B200 required; selected GPU is NVIDIA A100-PCIE-40GB\n",
+  "stderr": ""
+}

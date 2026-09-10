@@ -1,0 +1,10 @@
+FROM vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064f86781b963bd814f
+COPY requirements-agentdojo.txt /tmp/requirements-agentdojo.txt
+RUN python3 -m pip install --no-cache-dir -r /tmp/requirements-agentdojo.txt
+# AgentDojo's Vertex AI dependency uses protobuf 5; retain the Bigtable
+# dependency required by the base image's lmcache with a compatible release.
+RUN python3 -m pip install --no-cache-dir "google-cloud-bigtable==2.31.0" "protobuf==5.29.6"
+# These two metadata warnings are already present in the pinned vLLM image.
+# Keep its CUDA libraries unchanged; reject every NEW dependency conflict.
+RUN python3 -c "import subprocess; p=subprocess.run(['python3','-m','pip','check'],capture_output=True,text=True); print(p.stdout); baseline={'pygobject 3.42.1 requires pycairo, which is not installed.', 'nixl 1.2.0 has requirement nixl-cu13==1.2.0, but you have nixl-cu13 1.3.0.'}; actual=set(p.stdout.strip().splitlines()) if p.returncode else set(); assert p.returncode in (0,1) and not p.stderr and actual <= baseline, p.stdout+p.stderr"
+RUN NVIDIA_VISIBLE_DEVICES=void CUDA_VISIBLE_DEVICES= python3 -c "import torch,transformers,peft; assert torch.__version__ == '2.11.0+cu130'; assert transformers.__version__ == '5.12.1'; assert peft.__version__ == '0.20.0'"

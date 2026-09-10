@@ -1,0 +1,166 @@
+{
+  "schema": "agentdojo-b200-delivery-engineering-verification-v1",
+  "status": "pass",
+  "at_utc": "2026-09-10T11:56:25.767037+00:00",
+  "docker": {
+    "tag": "opcd-agentdojo:5e29f17b90a6fe15",
+    "image_id": "sha256:acaf6a8d5c5af677461094eca2215c6571ab4a42f7331d6fbd52ccd4e49e55ae",
+    "user": "1000:1000",
+    "username_environment": "USER=opcd, LOGNAME=opcd; prevents getpass failure when numeric UID has no passwd entry",
+    "gpu_visibility": "NVIDIA_VISIBLE_DEVICES=void, CUDA_VISIBLE_DEVICES empty",
+    "network": "none for checks and evaluator; image build used network",
+    "readonly_bundle": true,
+    "writable_runtime_root": "output/"
+  },
+  "environment": {
+    "vllm": "0.24.0",
+    "transformers": "5.12.1",
+    "torch": "2.11.0+cu130",
+    "cuda": "13.0",
+    "arch_flags": "sm_75 sm_80 sm_86 sm_90 sm_100 sm_120",
+    "at_utc": "2026-09-10T11:55:17.593983+00:00",
+    "agentdojo": "0.1.30",
+    "peft": "0.20.0",
+    "openai": "2.44.0",
+    "pydantic": "2.13.4",
+    "google-cloud-bigtable": "2.31.0",
+    "protobuf": "5.29.6"
+  },
+  "protocol": {
+    "status": "pass",
+    "cases_per_model": 1081,
+    "counts": {
+      "benign": 97,
+      "injection_utility": 35,
+      "attacked": 949
+    },
+    "models": [
+      "base",
+      "trained"
+    ],
+    "unmodified_upstream_files": 110,
+    "source_revision": "d3640b5b03a88eb44dad96852e1de1ef437d836e",
+    "native_scorer": true,
+    "model_evaluation": false
+  },
+  "per_suite_per_model": {
+    "workspace": {
+      "benign": 40,
+      "injection_utility": 14,
+      "attacked": 560
+    },
+    "banking": {
+      "benign": 16,
+      "injection_utility": 9,
+      "attacked": 144
+    },
+    "travel": {
+      "benign": 20,
+      "injection_utility": 7,
+      "attacked": 140
+    },
+    "slack": {
+      "benign": 21,
+      "injection_utility": 5,
+      "attacked": 105
+    }
+  },
+  "cpu_tests": {
+    "passed": 16,
+    "seconds": 21.853,
+    "command": "./agentdojo_b200.sh check",
+    "cases": [
+      "test_adapter_merge_matches_unmerged_tiny_model",
+      "test_complete_frozen_protocol",
+      "test_control_count_tamper",
+      "test_duplicate_part",
+      "test_error_fallback_is_preserved_but_not_confirmed_asr",
+      "test_failure_snapshot_contains_logs_and_preserves_status",
+      "test_local_http_native_trace_and_model_pairing",
+      "test_missing_part",
+      "test_no_overwrite",
+      "test_real_native_ground_truth_scorers_four_suites",
+      "test_runner_preflight_failure_automatically_exports",
+      "test_swapped_part_content",
+      "test_tampered_or_truncated_part",
+      "test_unicode_binary_and_empty_round_trip",
+      "test_unsafe_file_path",
+      "test_vllm_server_import_as_numeric_docker_user"
+    ],
+    "real_native_scorer_checks": "Original utility/security functions on ground-truth task execution in all four suites; synthetic HTTP responses additionally exercise the official benchmark wrappers and trace logger",
+    "adapter_merge": "Random tiny Qwen3_5 conditional model, one real OPCD update, adapter save/reload/safe merge, merged and unmerged logits agree",
+    "simulation_boundary": "Mock responses are explicitly marked simulation_only and rejected from formal evaluation; temporary fixture directories removed"
+  },
+  "dependency_gate": {
+    "status": "no_new_conflicts",
+    "fixed": "Pin google-cloud-bigtable 2.31.0 and protobuf 5.29.6 for compatibility with AgentDojo Vertex AI dependencies",
+    "base_image_pip_check_revalidated": true,
+    "inherited_base_warnings": [
+      "pygobject 3.42.1 requires pycairo, which is not installed.",
+      "nixl 1.2.0 has requirement nixl-cu13==1.2.0, but you have nixl-cu13 1.3.0."
+    ],
+    "note": "These exact two metadata warnings occur in the unmodified pinned vLLM image as well; CUDA libraries were kept unchanged. Docker build rejects any other dependency conflict."
+  },
+  "gpu_negative_preflight": {
+    "status": "pass",
+    "observation": "Selected A100 rejected before GPU allocation; no other process was stopped"
+  },
+  "vllm_entrypoint": {
+    "module_import_as_numeric_uid": "pass",
+    "full_cli_without_gpu": "Expected device-inference failure in CPU-only --help probe; not evidence of model/server execution",
+    "gpu_server_execution": false
+  },
+  "transport": {
+    "max_txt_bytes_including_headers": 90000,
+    "encoding": "UTF-8 readable text; binary logs use base64 within text",
+    "verified": [
+      "Chinese/emoji boundaries",
+      "exact text/binary/empty-file restoration",
+      "missing parts",
+      "duplicate parts",
+      "swapped payloads",
+      "truncated or damaged payloads",
+      "control count changes",
+      "unsafe paths",
+      "no overwrite",
+      "failure snapshot with logs and preserved failure status"
+    ],
+    "checksum": "Per-part SHA256, ordered hash chain, full-stream SHA256, per-original-file SHA256 and length",
+    "results_replaced": false
+  },
+  "asset_check": {
+    "non_weight_static_files": "SHA256 checked",
+    "weight_shards": 18,
+    "weight_check_this_task": "Size only; retained previously verified weight SHA256 values. Full hash gate runs before real evaluation."
+  },
+  "logs": {
+    "output/logs/agentdojo_build.log": {
+      "bytes": 28102,
+      "sha256": "1d641a41beb75bf5a672b0ab7259c7f28f15905a11f6d66bbaba3c7db1fef589"
+    },
+    "output/logs/agentdojo_check.log": {
+      "bytes": 11058,
+      "sha256": "1e2199a8efa7b308958414d5e4bb708792e824c0af6820ba1ca76db56e4ab7a2"
+    },
+    "output/logs/agentdojo_preflight.log": {
+      "bytes": 1038,
+      "sha256": "d4e41dc0f39168c4ebec9ceb02dad85c373c87725fc2ed7ae2e5d30ab38db57f"
+    },
+    "output/setup/agentdojo_negative_preflight.json": {
+      "bytes": 1240,
+      "sha256": "4a3da89eb9b8d83e68fd47829d5a1287c3ae8e5bc8b4dca0b512222b7d563064"
+    },
+    "output/setup/agentdojo_vllm_help.log": {
+      "bytes": 1940,
+      "sha256": "b909e3bf7c8e2906bbda831a3793de53258985fdea4e1e1d991fba78af94a4b4"
+    }
+  },
+  "B200_evaluation_verified": false,
+  "real_27B_evaluation_started": false,
+  "actual_ASR_or_task_success_reported": false,
+  "limits": [
+    "No access to target B200; actual driver compatibility, GPU server load, long-context VRAM and throughput require target preflight/run.",
+    "No completed real 27B training checkpoint was evaluated here.",
+    "TXT integrity validation does not establish benchmark correctness or make partial runs complete."
+  ]
+}

@@ -1,0 +1,457 @@
+{
+  "repository": "https://github.com/ethz-spylab/agentdojo",
+  "revision": "d3640b5b03a88eb44dad96852e1de1ef437d836e",
+  "package_version": "0.1.30",
+  "benchmark_version": "v1.2.1",
+  "all_vendored_files_unmodified": true,
+  "files": {
+    "CITATION.bib": {
+      "bytes": 492,
+      "sha256": "b97dc76c5e3a6a9adb0f53861fa1ebff626a5782e4204047caed1c5eba041084"
+    },
+    "LICENSE": {
+      "bytes": 1161,
+      "sha256": "4285a071f2d382338e52b4fb0a186d952984a34d43a33d8872e1a1d8cb43401e"
+    },
+    "src/agentdojo/__init__.py": {
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "src/agentdojo/agent_pipeline/__init__.py": {
+      "bytes": 1556,
+      "sha256": "b86f458f03f25bc322e897b63348eef2d0480bdd4abcdd80f321d85902fcd80f"
+    },
+    "src/agentdojo/agent_pipeline/agent_pipeline.py": {
+      "bytes": 10072,
+      "sha256": "c6d17e07ab2f072914481324c5a468723cf3628eab128b5219ad6ac3a5f65163"
+    },
+    "src/agentdojo/agent_pipeline/base_pipeline_element.py": {
+      "bytes": 1318,
+      "sha256": "b15f0eb72a286fdfd26f45a3ac587fd4f44063c2a49ed017d580f5f3f0d1fc34"
+    },
+    "src/agentdojo/agent_pipeline/basic_elements.py": {
+      "bytes": 2075,
+      "sha256": "0c35aae9ae3fb8dfdbc5bc7534db51349632ac9743331234f3ee6a86583a5962"
+    },
+    "src/agentdojo/agent_pipeline/errors.py": {
+      "bytes": 870,
+      "sha256": "1a828a45524b0e64c3e4abdab342fba721581134b7808dd00f02fa5bc5ca52e1"
+    },
+    "src/agentdojo/agent_pipeline/ground_truth_pipeline.py": {
+      "bytes": 2421,
+      "sha256": "acfb119e091589beafc53e98e8371088014d703c4e3f227c09732a86596ad194"
+    },
+    "src/agentdojo/agent_pipeline/llms/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/agentdojo/agent_pipeline/llms/anthropic_llm.py": {
+      "bytes": 12764,
+      "sha256": "381d91588b533fd3d78688730a4e95adf6c5d328eb4114754b43bc364d27694e"
+    },
+    "src/agentdojo/agent_pipeline/llms/cohere_llm.py": {
+      "bytes": 10109,
+      "sha256": "46bda8fe1df1131df7af448a435a33e469431009ab6fccab1544da849eddea1d"
+    },
+    "src/agentdojo/agent_pipeline/llms/google_llm.py": {
+      "bytes": 8926,
+      "sha256": "7c2fa1c2a2316fe5fccb8e59c7c1b8c00cf13684da07de2a5460d0a72ed13153"
+    },
+    "src/agentdojo/agent_pipeline/llms/local_llm.py": {
+      "bytes": 6314,
+      "sha256": "33d44390d28b7ddbfcef95e27e43413d88eedf87f6c2e35274eb5511f3496bcb"
+    },
+    "src/agentdojo/agent_pipeline/llms/openai_llm.py": {
+      "bytes": 8893,
+      "sha256": "5b00f34ebb1cd32283560fdc83274a4a20d67cb2d8be9ea3d8001ff430f56fd4"
+    },
+    "src/agentdojo/agent_pipeline/llms/prompting_llm.py": {
+      "bytes": 14300,
+      "sha256": "f57aa5785309e91e26808b4302ae9e505b1031dfd4fa0e93bdbe9f614baddc44"
+    },
+    "src/agentdojo/agent_pipeline/pi_detector.py": {
+      "bytes": 7119,
+      "sha256": "ed6faf1347b556dfcf7759ea872fbdb02db7f683f43fcf505fd6d51247a01c3e"
+    },
+    "src/agentdojo/agent_pipeline/planner.py": {
+      "bytes": 1867,
+      "sha256": "b5bb490fb3e88ebcc1f995c87b8bdf438419bc67b06ae8d3e812b9fcb3ee851b"
+    },
+    "src/agentdojo/agent_pipeline/tool_execution.py": {
+      "bytes": 6624,
+      "sha256": "96842ef579714cdc7f854bc13d4bca2be0c27897abc29dad2e1ba33ce3b11bdc"
+    },
+    "src/agentdojo/ast_utils.py": {
+      "bytes": 3190,
+      "sha256": "08d84f74f66151ff0438cb81aa58d3cd4fdc3f0881a0b5eb26d0b527948be221"
+    },
+    "src/agentdojo/attacks/__init__.py": {
+      "bytes": 493,
+      "sha256": "e5f2a950166c3ef6974ce8f8fcb7ab7dd33a6cd3496205b10c7bd907aa4287b6"
+    },
+    "src/agentdojo/attacks/attack_registry.py": {
+      "bytes": 1326,
+      "sha256": "cdbfefa137485531fa3ff33f3235b769d5116b4a1a4544b0fe48bffe212aafe5"
+    },
+    "src/agentdojo/attacks/base_attacks.py": {
+      "bytes": 6329,
+      "sha256": "d962c68a8a6cd41c33eac0a2fd27fe38d77dfb3e2f85425b2c2fda63c920b62b"
+    },
+    "src/agentdojo/attacks/baseline_attacks.py": {
+      "bytes": 2864,
+      "sha256": "0e3f3cec2173524989d67bd3d934d032774ad3fc5995969c9565613efaa21c6d"
+    },
+    "src/agentdojo/attacks/dos_attacks.py": {
+      "bytes": 4540,
+      "sha256": "160aa9604ce31cd3e54ecb06d9ed4acc770066a0dedd11d0742f6205d6077859"
+    },
+    "src/agentdojo/attacks/important_instructions_attacks.py": {
+      "bytes": 6222,
+      "sha256": "519f24e0b9d72f43343d665679adacc33758b50cd1b586a81fa53fb098dcfe71"
+    },
+    "src/agentdojo/base_tasks.py": {
+      "bytes": 6880,
+      "sha256": "08d3a4646d1a250968045b0f933803335650a4ed04c9d2387b17d08b1e0427c5"
+    },
+    "src/agentdojo/benchmark.py": {
+      "bytes": 17194,
+      "sha256": "b0cd12b7f8d8ca5dd8676afe11cbdcaa306517c7c5fb77bcddb78d7b7cb4037d"
+    },
+    "src/agentdojo/data/suites/banking/environment.yaml": {
+      "bytes": 2267,
+      "sha256": "3f539da1d97779b244cd122afc683dc69d602f338e1b3c42d126cbde33611c8b"
+    },
+    "src/agentdojo/data/suites/banking/injection_vectors.yaml": {
+      "bytes": 655,
+      "sha256": "5a18bd3aeb6d8d9e9fe94458cd7e06ceab4ed80aad85c2f42df2391af41eb0b5"
+    },
+    "src/agentdojo/data/suites/slack/environment.yaml": {
+      "bytes": 3867,
+      "sha256": "0ea2f9b83e5ffaae0bf50fab2b13d6c8ee59a952f791b16c9554fdc48935c87d"
+    },
+    "src/agentdojo/data/suites/slack/injection_vectors.yaml": {
+      "bytes": 554,
+      "sha256": "efc01621ffa7955ee10e00e916ac933a41bd8347ba285e1e4888813bf5e0d3a2"
+    },
+    "src/agentdojo/data/suites/travel/environment.yaml": {
+      "bytes": 20964,
+      "sha256": "ca8ef591bde5a8d8b9e2efe6830b8e4646c43f633c86f14cb878f588bb4b8a3c"
+    },
+    "src/agentdojo/data/suites/travel/injection_vectors.yaml": {
+      "bytes": 1529,
+      "sha256": "a6ab848b39d862439e7b4844a617e578294de93cd0176c1851184dd901edb51c"
+    },
+    "src/agentdojo/data/suites/workspace/environment.yaml": {
+      "bytes": 123,
+      "sha256": "08a22c4eac0f72012e23c135cf3157b6fa7b35881b57bd2e910a5b059c02d157"
+    },
+    "src/agentdojo/data/suites/workspace/gpt_prompts.txt": {
+      "bytes": 5751,
+      "sha256": "2fa475cc5a4e2df6cb7cd944cc1291aaa69191d4e388fd88c36521c877b13cda"
+    },
+    "src/agentdojo/data/suites/workspace/include/calendar.yaml": {
+      "bytes": 9610,
+      "sha256": "69b0ae96804e986b5a0dba694ad6ca34cf01c8c6b57bb8ceb618d9ed8640b803"
+    },
+    "src/agentdojo/data/suites/workspace/include/cloud_drive.yaml": {
+      "bytes": 28245,
+      "sha256": "a9731cd49fe7eb726e43c1727c40eff0d6ca2d85d53728aa744860a8c4214130"
+    },
+    "src/agentdojo/data/suites/workspace/include/inbox.yaml": {
+      "bytes": 13942,
+      "sha256": "e6fac364bfb0e89d3d0251ef8079ffa2791504673a426029034356b8228f2082"
+    },
+    "src/agentdojo/data/suites/workspace/injection_vectors.yaml": {
+      "bytes": 2997,
+      "sha256": "3390ac3da090ea0fde5f50ef0a74bf260786b35ab6ff14d47a199ecb41a15489"
+    },
+    "src/agentdojo/data/system_messages.yaml": {
+      "bytes": 494,
+      "sha256": "b65b4fa81ee473447ae6314b1c41e08f0d53a2e07f2a766901f1f4f1a53c51a4"
+    },
+    "src/agentdojo/default_suites/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/agentdojo/default_suites/v1/__init__.py": {
+      "bytes": 1,
+      "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b"
+    },
+    "src/agentdojo/default_suites/v1/banking/__init__.py": {
+      "bytes": 348,
+      "sha256": "06dbcff8dddf069419eb0bc4ff7ffaf45c38fc6d0f5ac978d76da47b03700ac3"
+    },
+    "src/agentdojo/default_suites/v1/banking/injection_tasks.py": {
+      "bytes": 15309,
+      "sha256": "fa2dedf8e66c95ffadb54f5a26648728b08c56f302858de4ee9a5cc0b3891618"
+    },
+    "src/agentdojo/default_suites/v1/banking/task_suite.py": {
+      "bytes": 1093,
+      "sha256": "c58ec73db16f713a16aaec787dac45856e546f4d95be84ab6a4bed9bc12613b6"
+    },
+    "src/agentdojo/default_suites/v1/banking/user_tasks.py": {
+      "bytes": 19450,
+      "sha256": "37af838194f001af80cc040315bcb2d69d0112324d424f9a323473b41b317f82"
+    },
+    "src/agentdojo/default_suites/v1/slack/__init__.py": {
+      "bytes": 334,
+      "sha256": "711f6ab4ef9cbe2ca5f4ba24cd29ad0d749117572716dcd8ec2d06416ea1def1"
+    },
+    "src/agentdojo/default_suites/v1/slack/injection_tasks.py": {
+      "bytes": 9144,
+      "sha256": "d5775da1689e13192b665837e72cee88ed76f622e9b998e9def18b700fdc5afc"
+    },
+    "src/agentdojo/default_suites/v1/slack/task_suite.py": {
+      "bytes": 939,
+      "sha256": "bdc6798e8ef83a54e787af80ed44f94e4be8f24aba2eaec2103e3120958c3670"
+    },
+    "src/agentdojo/default_suites/v1/slack/user_tasks.py": {
+      "bytes": 26012,
+      "sha256": "25e43a0c58109765da090aa2f01bfb0892aaee70ca1622028074d7b49443a57b"
+    },
+    "src/agentdojo/default_suites/v1/tools/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/agentdojo/default_suites/v1/tools/banking_client.py": {
+      "bytes": 5137,
+      "sha256": "0e4273f521db7ff6d5e7f7f552e917b11940102abd932aea8a2998b517441b42"
+    },
+    "src/agentdojo/default_suites/v1/tools/calendar_client.py": {
+      "bytes": 10237,
+      "sha256": "5d551339fb87237dd1414a003b26f4f851dbdd2b0826225025e44f16420add22"
+    },
+    "src/agentdojo/default_suites/v1/tools/cloud_drive_client.py": {
+      "bytes": 5577,
+      "sha256": "19376d95731c46477037986319bc8522b4bc96f4924e730b11906df23fc00b93"
+    },
+    "src/agentdojo/default_suites/v1/tools/email_client.py": {
+      "bytes": 10235,
+      "sha256": "782adb70c81ec765919ae835494fac163dbb46f21ef46f6dcf18eab390b5e294"
+    },
+    "src/agentdojo/default_suites/v1/tools/file_reader.py": {
+      "bytes": 435,
+      "sha256": "09438864a1e1ac6564df3e4f7eb60a9a224de2ef8a92c4eb4899f7768ce49d6d"
+    },
+    "src/agentdojo/default_suites/v1/tools/slack.py": {
+      "bytes": 4586,
+      "sha256": "c70dbc7b3356e93a1c2bd4e78700859ea58b36adbf8169e51b03f355b0a5fe69"
+    },
+    "src/agentdojo/default_suites/v1/tools/travel_booking_client.py": {
+      "bytes": 15177,
+      "sha256": "ad6b3441a38a1ff4bdc7227a15fb9ed764a7906baf2f75902bdb70f2100f69ba"
+    },
+    "src/agentdojo/default_suites/v1/tools/types.py": {
+      "bytes": 3422,
+      "sha256": "691ed3353bd04e9f8233c4f70901daefb564e56209a8946f516496520aca3c13"
+    },
+    "src/agentdojo/default_suites/v1/tools/user_account.py": {
+      "bytes": 1978,
+      "sha256": "f097c4b2b6cd6784272987d8d37dd7cc5d599620d64b371f7c2af8e65d7ad673"
+    },
+    "src/agentdojo/default_suites/v1/tools/web.py": {
+      "bytes": 1436,
+      "sha256": "246cc534a939ade2864bb62441d8452de7a840d007147c22391ad07bff91594c"
+    },
+    "src/agentdojo/default_suites/v1/travel/__init__.py": {
+      "bytes": 341,
+      "sha256": "bd0bf8a57c39846c9476adc60be5c870faba09dd497254c2d4520bea21ab3bba"
+    },
+    "src/agentdojo/default_suites/v1/travel/injection_tasks.py": {
+      "bytes": 12665,
+      "sha256": "9159d215c7737696a9590b950908171211de6abd4d198b6ec2f2c8ffb856a8d6"
+    },
+    "src/agentdojo/default_suites/v1/travel/task_suite.py": {
+      "bytes": 3127,
+      "sha256": "a2b58f094bd61a79e245ca74c94d9a3d62cc6bc744e5ee21bdadabb43960ba60"
+    },
+    "src/agentdojo/default_suites/v1/travel/user_tasks.py": {
+      "bytes": 76962,
+      "sha256": "757f0e28208f92c2082e016469654524cb1120ec10928ce229da15fe32f6d3ee"
+    },
+    "src/agentdojo/default_suites/v1/workspace/__init__.py": {
+      "bytes": 362,
+      "sha256": "b50429a079625b039389dce1063d993e38d18213ace046dffa65a735e73d08f9"
+    },
+    "src/agentdojo/default_suites/v1/workspace/injection_tasks.py": {
+      "bytes": 10615,
+      "sha256": "03e0894ffb544a79fd0bfd2c62cc5f90b19a2b1d429068d800239bfd020b6dcc"
+    },
+    "src/agentdojo/default_suites/v1/workspace/task_suite.py": {
+      "bytes": 2199,
+      "sha256": "96fa51ab20f03c30cd2d7bc754b76d717ddbd68bdf39adc85f0e92fc4d2c7ec4"
+    },
+    "src/agentdojo/default_suites/v1/workspace/user_tasks.py": {
+      "bytes": 54007,
+      "sha256": "d4996f29cc975cc56f2595b2c99eff56052c7346b2039c08372ab209828c2acb"
+    },
+    "src/agentdojo/default_suites/v1_1/__init__.py": {
+      "bytes": 69,
+      "sha256": "6afde4c3d03f2535eaf4b7764f6bc35864fe748c2e89b4673e952c2665813b71"
+    },
+    "src/agentdojo/default_suites/v1_1/travel/user_tasks.py": {
+      "bytes": 73458,
+      "sha256": "de8746e57fa85a5ee3ec9e4e6d66316c7c33e166e51404ffb64709b4458b9ae6"
+    },
+    "src/agentdojo/default_suites/v1_1_1/__init__.py": {
+      "bytes": 307,
+      "sha256": "c12b7d8faa09c773e1432f680c55d2272a21609b8a8460844c0d4f313483e022"
+    },
+    "src/agentdojo/default_suites/v1_1_1/banking/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/agentdojo/default_suites/v1_1_1/banking/user_tasks.py": {
+      "bytes": 2751,
+      "sha256": "d7858d3f9a573fcc334d19d4aa63ba92867cd8d5b99e2d102f7c60840fd42b81"
+    },
+    "src/agentdojo/default_suites/v1_1_1/slack/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/agentdojo/default_suites/v1_1_1/slack/user_tasks.py": {
+      "bytes": 11114,
+      "sha256": "d63bace385d0f341cb3d20bbb698a3d1530d7eb6e346cc65d04e4b7ea255467d"
+    },
+    "src/agentdojo/default_suites/v1_1_1/travel/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/agentdojo/default_suites/v1_1_1/travel/injection_tasks.py": {
+      "bytes": 2995,
+      "sha256": "23f325aa0821c7982991657588ee0b58057423559e97d6ebd6febc8274b5ac1b"
+    },
+    "src/agentdojo/default_suites/v1_1_1/travel/user_tasks.py": {
+      "bytes": 4257,
+      "sha256": "356e46470861de40172a252e92149a2396bca3f66cfcadc0e5a4450fe11c979f"
+    },
+    "src/agentdojo/default_suites/v1_1_1/workspace/user_tasks.py": {
+      "bytes": 8010,
+      "sha256": "76da20246f658609a96d95dc206ae7f58785cab5b1f100f76d367c8e4b6fc7f9"
+    },
+    "src/agentdojo/default_suites/v1_1_2/__init__.py": {
+      "bytes": 201,
+      "sha256": "2a9e4756075bf0f0db19525d86dec24c98df7ac7a1f5e7fb239a5d438fd6b720"
+    },
+    "src/agentdojo/default_suites/v1_1_2/travel/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/agentdojo/default_suites/v1_1_2/travel/injection_tasks.py": {
+      "bytes": 5267,
+      "sha256": "d8688a8896736e4807b649340b84af65eb7b36f34d082073690333445a410b39"
+    },
+    "src/agentdojo/default_suites/v1_1_2/workspace/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/agentdojo/default_suites/v1_1_2/workspace/injection_tasks.py": {
+      "bytes": 8339,
+      "sha256": "3ffccf1e54362377a3d02955010b041a572c64aa209bb3e8b70c1fe5fc76fdad"
+    },
+    "src/agentdojo/default_suites/v1_1_2/workspace/user_tasks.py": {
+      "bytes": 5395,
+      "sha256": "ff4e1b65f10346ba167d44b3236f4fe10fbb2066d6e2a22c4edc8b243d0f0a53"
+    },
+    "src/agentdojo/default_suites/v1_2/__init__.py": {
+      "bytes": 365,
+      "sha256": "cc643d412ba5aea5dfe7896a130af95d05740bcc62ff9df97835ed66786b7498"
+    },
+    "src/agentdojo/default_suites/v1_2/banking/injection_tasks.py": {
+      "bytes": 15207,
+      "sha256": "3e678ad165f911dbc16c8307de761dcc15da274716bec7ac0d05db167ec2c311"
+    },
+    "src/agentdojo/default_suites/v1_2/slack/user_tasks.py": {
+      "bytes": 3377,
+      "sha256": "36c51c6fd744301ed5dd9b654f02aca504af50df827453d1754862ed6201fcc2"
+    },
+    "src/agentdojo/default_suites/v1_2/travel/injection_tasks.py": {
+      "bytes": 2048,
+      "sha256": "15b8ccee487223bfc6afc58cf05591e3a96fb668eee39d7d47ac2fd98f5173c0"
+    },
+    "src/agentdojo/default_suites/v1_2/travel/user_tasks.py": {
+      "bytes": 5037,
+      "sha256": "a563163efea5e723e4fbbafae66fca33e6b743e50f6c25865167dc0663615ef9"
+    },
+    "src/agentdojo/default_suites/v1_2/workspace/injection_tasks.py": {
+      "bytes": 17855,
+      "sha256": "d11a9a4aa86085a1b0e8cea20652dd20f903adedfc6065175a0ead858c29e4a3"
+    },
+    "src/agentdojo/default_suites/v1_2/workspace/user_tasks.py": {
+      "bytes": 8951,
+      "sha256": "6b21b84053d1ac1703674e75d75dd4986e489d3434fcf60e8707b96114ab03bb"
+    },
+    "src/agentdojo/default_suites/v1_2_1/__init__.py": {
+      "bytes": 79,
+      "sha256": "e092b155d26104e080e15ccb1747fdc0365be0b318475886337e4089d9484739"
+    },
+    "src/agentdojo/default_suites/v1_2_1/workspace/injection_tasks.py": {
+      "bytes": 4361,
+      "sha256": "5a30d439850b58cfb834840bdfe7bbdf4405859bb1899e59ef476f29156078e8"
+    },
+    "src/agentdojo/functions_runtime.py": {
+      "bytes": 12472,
+      "sha256": "5f425246cabb2ffe28a75f7108817dc32205876db4c67ffb3bc2113cf55bb8eb"
+    },
+    "src/agentdojo/logging.py": {
+      "bytes": 10004,
+      "sha256": "74d46f7ff3e3eb45b1fae7a025ca0f0dcc4b2e125533927748728c81ae02ce50"
+    },
+    "src/agentdojo/models.py": {
+      "bytes": 4165,
+      "sha256": "06abf14f8d524d488218c9989cf58a88112866dda2d2981c376bb241a6d24656"
+    },
+    "src/agentdojo/openapi_utils.py": {
+      "bytes": 1897,
+      "sha256": "959f8a6a14692ae5089866a99b4bb3ab8bd6c3de02449a827aae3bfc45e7f618"
+    },
+    "src/agentdojo/scripts/__init__.py": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "src/agentdojo/scripts/benchmark.py": {
+      "bytes": 8572,
+      "sha256": "43e2b1afc929c32884abe6468ace801336bd1c7bf01586204783479b7d83e59a"
+    },
+    "src/agentdojo/scripts/check_suites.py": {
+      "bytes": 2591,
+      "sha256": "7806527357e126d54fa88a2a0ef2eec3f7b6ffefca90f63c179012dc51d91ef6"
+    },
+    "src/agentdojo/strenum.py": {
+      "bytes": 280,
+      "sha256": "ac76fd07924a27fc42c33e626c77ed93ea48e9f7d4effc1548b8b908b166737f"
+    },
+    "src/agentdojo/task_suite/__init__.py": {
+      "bytes": 374,
+      "sha256": "6821364aecf7c72451e36fde92974188e221e71b19936659795d9ff771718406"
+    },
+    "src/agentdojo/task_suite/load_suites.py": {
+      "bytes": 2758,
+      "sha256": "9fcbf5eaf9af38c6a5a85a202711f7575618e30d63bbb0156934c3702132392c"
+    },
+    "src/agentdojo/task_suite/task_combinators.py": {
+      "bytes": 3526,
+      "sha256": "a225f427c006b2fd814df86c47225ce9193d51857e3f14e69c8a56ee49116df1"
+    },
+    "src/agentdojo/task_suite/task_suite.py": {
+      "bytes": 19763,
+      "sha256": "4d1f1c41c35b0ef52e9860117bc4b3ef323c3f8695a850143a2887adefc4199c"
+    },
+    "src/agentdojo/types.py": {
+      "bytes": 3490,
+      "sha256": "207b688794d5e214099c00b0dff3a03429f8f3632fcbbdafeac291dc190fbfca"
+    },
+    "src/agentdojo/yaml_loader.py": {
+      "bytes": 2597,
+      "sha256": "73443ec93c140dd2365d1c093f983729dca25075ee39e99047fa6c3d22ad9194"
+    }
+  },
+  "secopd_adapter_source": {
+    "repository": "https://github.com/pppyb/SecOPD",
+    "revision": "571502a2a315c4b8820dd878d4569e2a2222cb88",
+    "file": "evaluation/agentdojo/overrides/agentdojo/agent_pipeline/llms/local_llm.py",
+    "packaged_path": "code/vendor/secopd_local_llm.py",
+    "sha256": "18cf68e4bb27579373171c250d09f1e4eb15c683d0ba6c172ff86625bfd58fd9"
+  },
+  "scorer": "Original task_suite.py utility/security and trace/state functions; no LLM judge or custom success matching."
+}

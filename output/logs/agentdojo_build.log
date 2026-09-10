@@ -1,0 +1,328 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 753B done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064f86781b963bd814f
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/5] FROM docker.io/vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064f86781b963bd814f
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 286B done
+#5 DONE 0.0s
+
+#6 [2/5] COPY requirements-agentdojo.txt /tmp/requirements-agentdojo.txt
+#6 CACHED
+
+#7 [3/5] RUN python3 -m pip install --no-cache-dir -r /tmp/requirements-agentdojo.txt
+#7 CACHED
+
+#8 [4/5] RUN python3 -m pip install --no-cache-dir "google-cloud-bigtable==2.31.0" && python3 -m pip check
+#8 3.534 Collecting google-cloud-bigtable==2.31.0
+#8 4.336   Downloading google_cloud_bigtable-2.31.0-py3-none-any.whl.metadata (5.5 kB)
+#8 4.348 Requirement already satisfied: google-api-core<3.0.0,>=2.16.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2.31.0)
+#8 4.350 Requirement already satisfied: google-cloud-core<3.0.0,>=1.4.4 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (2.6.0)
+#8 4.351 Requirement already satisfied: google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (2.55.1)
+#8 4.352 Requirement already satisfied: grpc-google-iam-v1<1.0.0,>=0.12.4 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (0.14.4)
+#8 4.353 Requirement already satisfied: proto-plus<2.0.0,>=1.22.3 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (1.28.0)
+#8 4.354 Requirement already satisfied: protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<7.0.0,>=3.20.2 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (5.29.6)
+#8 4.354 Requirement already satisfied: google-crc32c<2.0.0dev,>=1.5.0 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (1.8.0)
+#8 4.357 Requirement already satisfied: googleapis-common-protos<2.0.0,>=1.63.2 in /usr/local/lib/python3.12/dist-packages (from google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (1.75.0)
+#8 4.359 Requirement already satisfied: requests<3.0.0,>=2.33.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2.34.2)
+#8 4.362 Requirement already satisfied: grpcio<2.0.0,>=1.41.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (1.81.1)
+#8 4.363 Requirement already satisfied: grpcio-status<2.0.0,>=1.41.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (1.71.2)
+#8 4.365 Requirement already satisfied: pyasn1-modules>=0.2.1 in /usr/local/lib/python3.12/dist-packages (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (0.4.2)
+#8 4.365 Requirement already satisfied: cryptography>=38.0.3 in /usr/local/lib/python3.12/dist-packages (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (49.0.0)
+#8 4.375 Requirement already satisfied: typing-extensions~=4.12 in /usr/local/lib/python3.12/dist-packages (from grpcio<2.0.0,>=1.41.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (4.15.0)
+#8 4.379 Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (3.4.7)
+#8 4.380 Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (3.18)
+#8 4.380 Requirement already satisfied: urllib3<3,>=1.26 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2.7.0)
+#8 4.381 Requirement already satisfied: certifi>=2023.5.7 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2026.6.17)
+#8 4.388 Requirement already satisfied: cffi>=2.0.0 in /usr/local/lib/python3.12/dist-packages (from cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (2.0.0)
+#8 4.389 Requirement already satisfied: pycparser in /usr/local/lib/python3.12/dist-packages (from cffi>=2.0.0->cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (3.0)
+#8 4.391 Requirement already satisfied: pyasn1<0.7.0,>=0.6.1 in /usr/local/lib/python3.12/dist-packages (from pyasn1-modules>=0.2.1->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (0.6.3)
+#8 4.673 Downloading google_cloud_bigtable-2.31.0-py3-none-any.whl (488 kB)
+#8 7.667 Installing collected packages: google-cloud-bigtable
+#8 7.667   Attempting uninstall: google-cloud-bigtable
+#8 7.671     Found existing installation: google-cloud-bigtable 2.40.0
+#8 8.218     Uninstalling google-cloud-bigtable-2.40.0:
+#8 9.150       Successfully uninstalled google-cloud-bigtable-2.40.0
+#8 9.705 Successfully installed google-cloud-bigtable-2.31.0
+#8 9.705 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#8 9.707 
+#8 9.707 [notice] A new release of pip is available: 26.1.2 -> 26.2.1
+#8 9.707 [notice] To update, run: python3 -m pip install --upgrade pip
+#8 10.48 pygobject 3.42.1 requires pycairo, which is not installed.
+#8 10.48 nixl 1.2.0 has requirement nixl-cu13==1.2.0, but you have nixl-cu13 1.3.0.
+#8 ERROR: process "/bin/sh -c python3 -m pip install --no-cache-dir \"google-cloud-bigtable==2.31.0\" && python3 -m pip check" did not complete successfully: exit code: 1
+------
+ > [4/5] RUN python3 -m pip install --no-cache-dir "google-cloud-bigtable==2.31.0" && python3 -m pip check:
+7.671     Found existing installation: google-cloud-bigtable 2.40.0
+8.218     Uninstalling google-cloud-bigtable-2.40.0:
+9.150       Successfully uninstalled google-cloud-bigtable-2.40.0
+9.705 Successfully installed google-cloud-bigtable-2.31.0
+9.705 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+9.707 
+9.707 [notice] A new release of pip is available: 26.1.2 -> 26.2.1
+9.707 [notice] To update, run: python3 -m pip install --upgrade pip
+10.48 pygobject 3.42.1 requires pycairo, which is not installed.
+10.48 nixl 1.2.0 has requirement nixl-cu13==1.2.0, but you have nixl-cu13 1.3.0.
+------
+Dockerfile:6
+--------------------
+   4 |     # AgentDojo's Vertex AI dependency uses protobuf 5; retain the Bigtable
+   5 |     # dependency required by the base image's lmcache with a compatible release.
+   6 | >>> RUN python3 -m pip install --no-cache-dir "google-cloud-bigtable==2.31.0" && python3 -m pip check
+   7 |     RUN NVIDIA_VISIBLE_DEVICES=void CUDA_VISIBLE_DEVICES= python3 -c "import torch,transformers,peft; assert torch.__version__ == '2.11.0+cu130'; assert transformers.__version__ == '5.12.1'; assert peft.__version__ == '0.20.0'"
+   8 |     
+--------------------
+ERROR: failed to build: failed to solve: process "/bin/sh -c python3 -m pip install --no-cache-dir \"google-cloud-bigtable==2.31.0\" && python3 -m pip check" did not complete successfully: exit code: 1
+1459376 v0.33.0 /usr/libexec/docker/cli-plugins/docker-buildx buildx build -t opcd-agentdojo:00b5d88d7a888a77 /home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/output/setup/agentdojo_build
+github.com/docker/buildx/commands.runBuildWithOptions
+	github.com/docker/buildx/commands/build.go:484
+github.com/docker/buildx/commands.runBuild
+	github.com/docker/buildx/commands/build.go:399
+github.com/docker/buildx/commands.buildCmd.func1
+	github.com/docker/buildx/commands/build.go:520
+github.com/docker/cli/cli-plugins/plugin.RunPlugin.func1.1.2
+	github.com/docker/cli@v29.3.1+incompatible/cli-plugins/plugin/plugin.go:65
+github.com/spf13/cobra.(*Command).execute
+	github.com/spf13/cobra@v1.10.2/command.go:1015
+github.com/spf13/cobra.(*Command).ExecuteC
+	github.com/spf13/cobra@v1.10.2/command.go:1148
+github.com/spf13/cobra.(*Command).Execute
+	github.com/spf13/cobra@v1.10.2/command.go:1071
+github.com/docker/cli/cli-plugins/plugin.RunPlugin
+	github.com/docker/cli@v29.3.1+incompatible/cli-plugins/plugin/plugin.go:80
+main.runPlugin
+	github.com/docker/buildx/cmd/buildx/main.go:65
+main.run
+	github.com/docker/buildx/cmd/buildx/main.go:79
+main.main
+	github.com/docker/buildx/cmd/buildx/main.go:89
+runtime.main
+	runtime/proc.go:285
+runtime.goexit
+	runtime/asm_amd64.s:1693
+
+1685999  /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+github.com/moby/buildkit/executor/runcexecutor.exitError
+	/root/build-deb/engine/vendor/github.com/moby/buildkit/executor/runcexecutor/executor.go:391
+github.com/moby/buildkit/executor/runcexecutor.(*runcExecutor).Run
+	/root/build-deb/engine/vendor/github.com/moby/buildkit/executor/runcexecutor/executor.go:339
+github.com/moby/buildkit/solver/llbsolver/ops.(*ExecOp).Exec
+	/root/build-deb/engine/vendor/github.com/moby/buildkit/solver/llbsolver/ops/exec.go:498
+github.com/moby/buildkit/solver.(*sharedOp).Exec.func2
+	/root/build-deb/engine/vendor/github.com/moby/buildkit/solver/jobs.go:1181
+github.com/moby/buildkit/util/flightcontrol.(*call[...]).run
+	/root/build-deb/engine/vendor/github.com/moby/buildkit/util/flightcontrol/flightcontrol.go:122
+sync.(*Once).doSlow
+	/usr/local/go/src/sync/once.go:78
+sync.(*Once).Do
+	/usr/local/go/src/sync/once.go:69
+runtime.goexit
+	/usr/local/go/src/runtime/asm_amd64.s:1693
+
+1459376 v0.33.0 /usr/libexec/docker/cli-plugins/docker-buildx buildx build -t opcd-agentdojo:00b5d88d7a888a77 /home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/output/setup/agentdojo_build
+google.golang.org/grpc.(*ClientConn).Invoke
+	google.golang.org/grpc@v1.79.3/call.go:35
+github.com/moby/buildkit/api/services/control.(*controlClient).Solve
+	github.com/moby/buildkit@v0.29.0/api/services/control/control_grpc.pb.go:88
+github.com/moby/buildkit/client.(*Client).solve.func2
+	github.com/moby/buildkit@v0.29.0/client/solve.go:320
+golang.org/x/sync/errgroup.(*Group).Go.func1
+	golang.org/x/sync@v0.19.0/errgroup/errgroup.go:93
+runtime.goexit
+	runtime/asm_amd64.s:1693
+
+1685999  /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+github.com/moby/buildkit/solver.(*edge).execOp
+	/root/build-deb/engine/vendor/github.com/moby/buildkit/solver/edge.go:963
+github.com/moby/buildkit/solver/internal/pipe.NewWithFunction[...].func2
+	/root/build-deb/engine/vendor/github.com/moby/buildkit/solver/internal/pipe/pipe.go:78
+runtime.goexit
+	/usr/local/go/src/runtime/asm_amd64.s:1693
+
+1459376 v0.33.0 /usr/libexec/docker/cli-plugins/docker-buildx buildx build -t opcd-agentdojo:00b5d88d7a888a77 /home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/output/setup/agentdojo_build
+github.com/moby/buildkit/client.(*Client).solve.func2
+	github.com/moby/buildkit@v0.29.0/client/solve.go:322
+golang.org/x/sync/errgroup.(*Group).Go.func1
+	golang.org/x/sync@v0.19.0/errgroup/errgroup.go:93
+
+1685999  /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
+github.com/moby/buildkit/solver/llbsolver/ops.(*ExecOp).Exec
+	/root/build-deb/engine/vendor/github.com/moby/buildkit/solver/llbsolver/ops/exec.go:519
+github.com/moby/buildkit/solver.(*sharedOp).Exec.func2
+	/root/build-deb/engine/vendor/github.com/moby/buildkit/solver/jobs.go:1181
+
+Traceback (most recent call last):
+  File "/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/agentdojo_launcher.py", line 119, in <module>
+    main()
+  File "/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/scripts/agentdojo_launcher.py", line 41, in main
+    subprocess.run(['docker', 'build', '-t', image, str(context)], check=True)
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['docker', 'build', '-t', 'opcd-agentdojo:00b5d88d7a888a77', '/home/shuai/AAAI 2027/safety_opcd_plan/OPCD_Qwen38_27B_B200_9600_20260910/output/setup/agentdojo_build']' returned non-zero exit status 1.
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.32kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064f86781b963bd814f
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/6] FROM docker.io/vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064f86781b963bd814f
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 286B done
+#5 DONE 0.0s
+
+#6 [2/6] COPY requirements-agentdojo.txt /tmp/requirements-agentdojo.txt
+#6 CACHED
+
+#7 [3/6] RUN python3 -m pip install --no-cache-dir -r /tmp/requirements-agentdojo.txt
+#7 CACHED
+
+#8 [4/6] RUN python3 -m pip install --no-cache-dir "google-cloud-bigtable==2.31.0"
+#8 2.654 Collecting google-cloud-bigtable==2.31.0
+#8 3.373   Downloading google_cloud_bigtable-2.31.0-py3-none-any.whl.metadata (5.5 kB)
+#8 3.383 Requirement already satisfied: google-api-core<3.0.0,>=2.16.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2.31.0)
+#8 3.384 Requirement already satisfied: google-cloud-core<3.0.0,>=1.4.4 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (2.6.0)
+#8 3.386 Requirement already satisfied: google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (2.55.1)
+#8 3.387 Requirement already satisfied: grpc-google-iam-v1<1.0.0,>=0.12.4 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (0.14.4)
+#8 3.388 Requirement already satisfied: proto-plus<2.0.0,>=1.22.3 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (1.28.0)
+#8 3.389 Requirement already satisfied: protobuf!=4.21.0,!=4.21.1,!=4.21.2,!=4.21.3,!=4.21.4,!=4.21.5,<7.0.0,>=3.20.2 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (5.29.6)
+#8 3.390 Requirement already satisfied: google-crc32c<2.0.0dev,>=1.5.0 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (1.8.0)
+#8 3.392 Requirement already satisfied: googleapis-common-protos<2.0.0,>=1.63.2 in /usr/local/lib/python3.12/dist-packages (from google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (1.75.0)
+#8 3.394 Requirement already satisfied: requests<3.0.0,>=2.33.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2.34.2)
+#8 3.397 Requirement already satisfied: grpcio<2.0.0,>=1.41.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (1.81.1)
+#8 3.398 Requirement already satisfied: grpcio-status<2.0.0,>=1.41.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (1.71.2)
+#8 3.400 Requirement already satisfied: pyasn1-modules>=0.2.1 in /usr/local/lib/python3.12/dist-packages (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (0.4.2)
+#8 3.401 Requirement already satisfied: cryptography>=38.0.3 in /usr/local/lib/python3.12/dist-packages (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (49.0.0)
+#8 3.410 Requirement already satisfied: typing-extensions~=4.12 in /usr/local/lib/python3.12/dist-packages (from grpcio<2.0.0,>=1.41.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (4.15.0)
+#8 3.415 Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (3.4.7)
+#8 3.415 Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (3.18)
+#8 3.416 Requirement already satisfied: urllib3<3,>=1.26 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2.7.0)
+#8 3.416 Requirement already satisfied: certifi>=2023.5.7 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2026.6.17)
+#8 3.423 Requirement already satisfied: cffi>=2.0.0 in /usr/local/lib/python3.12/dist-packages (from cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (2.0.0)
+#8 3.425 Requirement already satisfied: pycparser in /usr/local/lib/python3.12/dist-packages (from cffi>=2.0.0->cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (3.0)
+#8 3.426 Requirement already satisfied: pyasn1<0.7.0,>=0.6.1 in /usr/local/lib/python3.12/dist-packages (from pyasn1-modules>=0.2.1->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (0.6.3)
+#8 3.648 Downloading google_cloud_bigtable-2.31.0-py3-none-any.whl (488 kB)
+#8 9.442 Installing collected packages: google-cloud-bigtable
+#8 9.442   Attempting uninstall: google-cloud-bigtable
+#8 9.445     Found existing installation: google-cloud-bigtable 2.40.0
+#8 9.457     Uninstalling google-cloud-bigtable-2.40.0:
+#8 9.523       Successfully uninstalled google-cloud-bigtable-2.40.0
+#8 9.976 Successfully installed google-cloud-bigtable-2.31.0
+#8 9.976 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#8 9.978 
+#8 9.978 [notice] A new release of pip is available: 26.1.2 -> 26.2.1
+#8 9.978 [notice] To update, run: python3 -m pip install --upgrade pip
+#8 DONE 10.1s
+
+#9 [5/6] RUN python3 -c "import subprocess; p=subprocess.run(['python3','-m','pip','check'],capture_output=True,text=True); print(p.stdout); baseline={'pygobject 3.42.1 requires pycairo, which is not installed.', 'nixl 1.2.0 has requirement nixl-cu13==1.2.0, but you have nixl-cu13 1.3.0.'}; actual=set(p.stdout.strip().splitlines()) if p.returncode else set(); assert p.returncode in (0,1) and not p.stderr and actual <= baseline, p.stdout+p.stderr"
+#9 1.267 pygobject 3.42.1 requires pycairo, which is not installed.
+#9 1.267 nixl 1.2.0 has requirement nixl-cu13==1.2.0, but you have nixl-cu13 1.3.0.
+#9 1.267 
+#9 DONE 2.4s
+
+#10 [6/6] RUN NVIDIA_VISIBLE_DEVICES=void CUDA_VISIBLE_DEVICES= python3 -c "import torch,transformers,peft; assert torch.__version__ == '2.11.0+cu130'; assert transformers.__version__ == '5.12.1'; assert peft.__version__ == '0.20.0'"
+#10 DONE 22.9s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 1.1s done
+#11 writing image sha256:8d9c52c8fde520f8eedbc1f26a841723eb934a8d388b2990b6f83716f70d8528 done
+#11 naming to docker.io/library/opcd-agentdojo:8ea39a7c600803cd 0.0s done
+#11 DONE 1.1s
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.34kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064f86781b963bd814f
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/6] FROM docker.io/vllm/vllm-openai:v0.24.0@sha256:251eba5cc7c12fed0b75da22a9240e582b1c9e39f6fbc064f86781b963bd814f
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 286B done
+#5 DONE 0.0s
+
+#6 [2/6] COPY requirements-agentdojo.txt /tmp/requirements-agentdojo.txt
+#6 CACHED
+
+#7 [3/6] RUN python3 -m pip install --no-cache-dir -r /tmp/requirements-agentdojo.txt
+#7 CACHED
+
+#8 [4/6] RUN python3 -m pip install --no-cache-dir "google-cloud-bigtable==2.31.0" "protobuf==5.29.6"
+#8 2.657 Collecting google-cloud-bigtable==2.31.0
+#8 4.152   Downloading google_cloud_bigtable-2.31.0-py3-none-any.whl.metadata (5.5 kB)
+#8 4.160 Requirement already satisfied: protobuf==5.29.6 in /usr/local/lib/python3.12/dist-packages (5.29.6)
+#8 4.163 Requirement already satisfied: google-api-core<3.0.0,>=2.16.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2.31.0)
+#8 4.165 Requirement already satisfied: google-cloud-core<3.0.0,>=1.4.4 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (2.6.0)
+#8 4.166 Requirement already satisfied: google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (2.55.1)
+#8 4.167 Requirement already satisfied: grpc-google-iam-v1<1.0.0,>=0.12.4 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (0.14.4)
+#8 4.168 Requirement already satisfied: proto-plus<2.0.0,>=1.22.3 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (1.28.0)
+#8 4.169 Requirement already satisfied: google-crc32c<2.0.0dev,>=1.5.0 in /usr/local/lib/python3.12/dist-packages (from google-cloud-bigtable==2.31.0) (1.8.0)
+#8 4.172 Requirement already satisfied: googleapis-common-protos<2.0.0,>=1.63.2 in /usr/local/lib/python3.12/dist-packages (from google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (1.75.0)
+#8 4.174 Requirement already satisfied: requests<3.0.0,>=2.33.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2.34.2)
+#8 4.177 Requirement already satisfied: grpcio<2.0.0,>=1.41.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (1.81.1)
+#8 4.178 Requirement already satisfied: grpcio-status<2.0.0,>=1.41.0 in /usr/local/lib/python3.12/dist-packages (from google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (1.71.2)
+#8 4.180 Requirement already satisfied: pyasn1-modules>=0.2.1 in /usr/local/lib/python3.12/dist-packages (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (0.4.2)
+#8 4.180 Requirement already satisfied: cryptography>=38.0.3 in /usr/local/lib/python3.12/dist-packages (from google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (49.0.0)
+#8 4.190 Requirement already satisfied: typing-extensions~=4.12 in /usr/local/lib/python3.12/dist-packages (from grpcio<2.0.0,>=1.41.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (4.15.0)
+#8 4.194 Requirement already satisfied: charset_normalizer<4,>=2 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (3.4.7)
+#8 4.194 Requirement already satisfied: idna<4,>=2.5 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (3.18)
+#8 4.195 Requirement already satisfied: urllib3<3,>=1.26 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2.7.0)
+#8 4.195 Requirement already satisfied: certifi>=2023.5.7 in /usr/local/lib/python3.12/dist-packages (from requests<3.0.0,>=2.33.0->google-api-core<3.0.0,>=2.16.0->google-api-core[grpc]<3.0.0,>=2.16.0->google-cloud-bigtable==2.31.0) (2026.6.17)
+#8 4.202 Requirement already satisfied: cffi>=2.0.0 in /usr/local/lib/python3.12/dist-packages (from cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (2.0.0)
+#8 4.204 Requirement already satisfied: pycparser in /usr/local/lib/python3.12/dist-packages (from cffi>=2.0.0->cryptography>=38.0.3->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (3.0)
+#8 4.205 Requirement already satisfied: pyasn1<0.7.0,>=0.6.1 in /usr/local/lib/python3.12/dist-packages (from pyasn1-modules>=0.2.1->google-auth!=2.24.0,!=2.25.0,<3.0.0,>=2.14.1->google-cloud-bigtable==2.31.0) (0.6.3)
+#8 4.425 Downloading google_cloud_bigtable-2.31.0-py3-none-any.whl (488 kB)
+#8 5.651 Installing collected packages: google-cloud-bigtable
+#8 5.651   Attempting uninstall: google-cloud-bigtable
+#8 5.654     Found existing installation: google-cloud-bigtable 2.40.0
+#8 5.667     Uninstalling google-cloud-bigtable-2.40.0:
+#8 5.733       Successfully uninstalled google-cloud-bigtable-2.40.0
+#8 6.241 Successfully installed google-cloud-bigtable-2.31.0
+#8 6.241 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+#8 6.243 
+#8 6.243 [notice] A new release of pip is available: 26.1.2 -> 26.2.1
+#8 6.243 [notice] To update, run: python3 -m pip install --upgrade pip
+#8 DONE 6.4s
+
+#9 [5/6] RUN python3 -c "import subprocess; p=subprocess.run(['python3','-m','pip','check'],capture_output=True,text=True); print(p.stdout); baseline={'pygobject 3.42.1 requires pycairo, which is not installed.', 'nixl 1.2.0 has requirement nixl-cu13==1.2.0, but you have nixl-cu13 1.3.0.'}; actual=set(p.stdout.strip().splitlines()) if p.returncode else set(); assert p.returncode in (0,1) and not p.stderr and actual <= baseline, p.stdout+p.stderr"
+#9 3.538 pygobject 3.42.1 requires pycairo, which is not installed.
+#9 3.538 nixl 1.2.0 has requirement nixl-cu13==1.2.0, but you have nixl-cu13 1.3.0.
+#9 3.538 
+#9 DONE 3.6s
+
+#10 [6/6] RUN NVIDIA_VISIBLE_DEVICES=void CUDA_VISIBLE_DEVICES= python3 -c "import torch,transformers,peft; assert torch.__version__ == '2.11.0+cu130'; assert transformers.__version__ == '5.12.1'; assert peft.__version__ == '0.20.0'"
+#10 DONE 19.1s
+
+#11 exporting to image
+#11 exporting layers
+#11 exporting layers 1.1s done
+#11 writing image sha256:acaf6a8d5c5af677461094eca2215c6571ab4a42f7331d6fbd52ccd4e49e55ae done
+#11 naming to docker.io/library/opcd-agentdojo:5e29f17b90a6fe15 done
+#11 DONE 1.1s
