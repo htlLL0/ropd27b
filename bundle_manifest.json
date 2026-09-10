@@ -18,12 +18,8 @@
       "sha256": "828e4f92f8eef0ddf9d27c68561ff780c2283dbbb8d2ddedf58c7c40046b8105"
     },
     "README.md": {
-      "bytes": 2835,
-      "sha256": "700e402264f4e28305781b1b1cfa22efcc4c45447bd2cab4b3453046e2d9c385"
-    },
-    "README_先看这里.md": {
-      "bytes": 9533,
-      "sha256": "a9bf2f2ac39bf279a4b41cbea106218bb49f9f949420f71f3153a634b0e71985"
+      "bytes": 10443,
+      "sha256": "3ee22d1e4df4dd7c4e0f7c03b33692b82a8e4d30380deffe1f4d89499f2264f2"
     },
     "code/src/r_opcd/__init__.py": {
       "bytes": 843,
@@ -205,7 +201,7 @@
       "bytes": 11544,
       "sha256": "bbedc3fda3305820b977265f01b8619d87570a6739de3a5582c3464840f1e57a"
     },
-    "model/README.md": {
+    "model/MODEL_CARD.md": {
       "bytes": 65012,
       "sha256": "57e4bdb258ee1a7d2635c5174ebd4e56abe392505cdb5f8bbb356b0dc4293641"
     },
@@ -472,13 +468,9 @@
     "validation/static_and_negative_gpu_gate.json": {
       "bytes": 1314,
       "sha256": "7c92d43c476a6c8f8c105c97a35d9ef59ee3e969916776a8796f261b41da3e65"
-    },
-    "使用说明.md": {
-      "bytes": 11241,
-      "sha256": "16c7c6cfb1d334c2c7e5234ec94ceb9d9dfe6994a5d2a01d26f116fc17fb0c63"
     }
   },
-  "static_bytes": 55843758523,
+  "static_bytes": 55843745357,
   "runtime_results_excluded": "output/",
   "B200_execution_verified": false,
   "output_layout": {
@@ -489,8 +481,8 @@
     "supervisor_log": "output/main/supervisor.log",
     "model_server_log": "output/main/server.log"
   },
-  "updated_at_utc": "2026-09-10T10:11:00.177033+00:00",
-  "operator_guide": "使用说明.md",
+  "updated_at_utc": "2026-09-10T10:37:36.180611+00:00",
+  "operator_guide": "README.md",
   "git_distribution": {
     "large_assets_excluded": [
       "model/*.safetensors"
@@ -510,6 +502,13 @@
       "original_sha256": "34448b82c17d60fec9b65b1f093c115ddbaadc04beb1b0140b6bfed2e012a930",
       "packaged_sha256": "d4ee0615859c5a3bc398c87acd2ced61da2ba5d4fa6ee8d4581a237a41ceb524",
       "change": "Append tokenizer.json -filter -diff -merge -text to store original tokenizer bytes directly in Git; no inference files changed."
+    },
+    "model_card_rename": {
+      "original_path": "model/README.md",
+      "packaged_path": "model/MODEL_CARD.md",
+      "content_sha256": "57e4bdb258ee1a7d2635c5174ebd4e56abe392505cdb5f8bbb356b0dc4293641",
+      "content_unchanged": true,
+      "reason": "Keep one project README while preserving the complete upstream model card."
     }
   },
   "validation_receipts": "validation/: historical local checks, included in Git and static manifest; not B200 execution evidence"
