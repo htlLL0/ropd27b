@@ -1,0 +1,358 @@
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage[a4paper,margin=2.1cm,headheight=15pt]{geometry}
+\usepackage{amsmath,amssymb,bm,mathtools}
+\usepackage{booktabs,tabularx,array,longtable}
+\usepackage[most]{tcolorbox}
+\usepackage{xcolor,enumitem,fancyhdr,hyperref,fancyvrb,needspace}
+\definecolor{ink}{HTML}{173B55}
+\definecolor{accent}{HTML}{147D88}
+\hypersetup{colorlinks=true,linkcolor=ink,urlcolor=accent,pdftitle={R-OPCD V3.6 数学训练与评测方案}}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0.3em}
+\setlist{nosep,leftmargin=2em}
+\setlength{\emergencystretch}{2em}
+\pagestyle{fancy}\fancyhf{}
+\lhead{R-OPCD V3.6}\rhead{无标注 clean-$T^+$ OPCD}\cfoot{\thepage}
+\newcommand{\sg}{\operatorname{stopgrad}}
+\newcommand{\softmax}{\operatorname{softmax}}
+\newcommand{\KL}{\operatorname{KL}}
+\newcommand{\JS}{\operatorname{JS}}
+\newcommand{\clip}{\operatorname{clip}}
+\newcommand{\relu}{\operatorname{ReLU}}
+\newcommand{\Ind}{\mathbb{I}}
+\newcommand{\Vocab}{\mathcal{V}}
+\newtcolorbox{contractbox}[1][]{breakable,colback=accent!5,colframe=accent,
+  boxrule=0.7pt,arc=1.5mm,title=#1,fonttitle=\bfseries}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\title{\vspace{-1.0cm}\textcolor{ink}{\Huge\bfseries R-OPCD V3.6}\\[0.4em]
+  \Large 数学训练与评测方案\\[0.35em]
+  \large 干净输入 Teacher、全部样本 OPCD 与单 B200 交付}
+\author{训练期：同底座冻结 $T^+/T^-$ + Student LoRA\\
+  固定初始 Student 轨迹 · Student-anchored corrective target · Hybrid KL\\
+  评测期：原始模型与训练模型的 AgentDojo 配对测试}
+\date{方案版本 3.6 · 2026-09-11（北京时间）}
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\begin{contractbox}[本次版本决定]
+在已有成对干净／污染输入上，$T^+$ 只看到原始干净任务输入，$T^-$ 与 Student
+看到完全相同的带攻击输入；三者评价同一条实际 Student response。
+全部 9,600 条样本进入 OPCD，不作 A/U 标注筛选，固定 $g=1,c=1$，不做正常样例 SFT。
+保留双 Teacher 方向、Student-specific deficit、Student-anchored target 和全词表 Hybrid KL。
+采用单张 B200、Qwen3.8-27B、一次固定 rollout 与一轮 LoRA 训练，最后分别评测原始模型和训练模型。
+\end{contractbox}
+
+\textbf{状态：}本报告把已授权且已实现的修改收束为 V3.6，更新 V3.5 的方法合同与交付流程，
+不新增训练实验或改变现有运行参数。现有验证记录包括生成链路 14 项、训练 8 项、
+AgentDojo 16 项 CPU／工程检查；本地交付记录尚无 B200 上 27B 的完整训练和正式评测结果。
+
+\textbf{实现基线：}本次核对 B200 仓库提交 \texttt{86762f6}；后续版本提交包含本报告及文档索引。
+仓库目录保持不变，V3.5 文档和历史运行保留其原身份。
+\setcounter{tocdepth}{1}
+\begingroup
+\footnotesize\setlength{\parskip}{0pt}
+\tableofcontents
+\endgroup
+\clearpage
+
+\section{从 V3.5 到 V3.6 的修改清单}
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}p{0.34\textwidth}>{\raggedright\arraybackslash}p{0.39\textwidth}}
+\toprule
+项目 & V3.5 报告合同 & V3.6 当前合同 \\
+\midrule\endhead
+$T^+$ 输入 & authenticated task、精确恶意 span、attention quarantine、post-context guard & 原始 \texttt{user\_query + clean\_context}；普通 attention，无 q1／guard／span mask \\
+Student 与 $T^-$ & 普通受攻击输入 & 同一份原生 \texttt{user + input} 角色的受攻击 prompt token IDs \\
+样本准入 & 独立判定攻击成功 $A=1$ 的 correction 集 & 9,600 条全部进入 OPCD；不使用 A/U、风险标签或攻击成功与否筛选 \\
+Reliability & 校准的冻结 $T^+$ 滑窗 NLL 分数 & $c_t\equiv1$；不计算滑窗 NLL，不做 c 标定，不训练 Critic \\
+正常能力 SFT & 独立 ordinary utility controls，权重 0.1 & 权重为 0；不读取独立正常样例监督回答 \\
+OPCD 核心 & 方向、deficit、Student-anchored target、Hybrid KL & 保留；全词表精确计算，不启用 teacher-top32 分支 \\
+Rollout 调度 & 报告定义 cycle-level 刷新和 A/U 判定 & 先由初始底座生成一次 9,600 条，再固定轨迹训练一轮；无 Cycle 1/2 刷新 \\
+模型与硬件 & Qwen3-8B 的旧实例 & Qwen3.8-27B，单张完整 B200，BF16、TP=1 \\
+验证与交付 & 旧工程路径与开发诊断 & 可移植 Docker 包、双模型 AgentDojo、原始日志与可校验 TXT 副本 \\
+推理部署 & 只部署 Student & 保持不变；训练特权输入与两路 Teacher 均不进入部署 \\
+\bottomrule
+\end{longtable}
+
+\section{任务、样本与特权信息边界}
+记可信任务为 $u_i$，注入前的原始外部内容为 $o_i$，污染内容为
+\begin{equation}
+  \widetilde o_i=\operatorname{Inject}(o_i,a_i),\qquad
+  x_i^{\rm clean}=(u_i,o_i),\quad x_i^{\rm adv}=(u_i,\widetilde o_i).
+\end{equation}
+当前固定输入含 $N=9{,}600$ 条成对样本，沿用已经冻结的任务、攻击配对和注入位置。
+本次版本不会重新抽取数据、重新生成攻击或使用测试集挑选训练样本。
+
+\textbf{“无标注”指无需额外 A/U、风险、恶意 span 或 gold response 标注，
+并不意味着不需要成对干净输入。} $o_i$ 来自原始上游任务数据，不是从污染输入中
+调用另一个模型清洗，也不是使用正确答案反向构造。空的原始 clean context 允许保留。
+干净上下文是训练期特权信息；实际部署和 AgentDojo 测试不向 Student 提供这种 oracle。
+
+\Needspace{10\baselineskip}
+\subsection{三方消息合同}
+使用同一模型的原生 tokenizer 与 chat template；thinking 开启。
+\begin{center}
+\begin{tabularx}{\textwidth}{p{0.15\textwidth}YY}
+\toprule
+角色 & Prompt & 参数与梯度 \\
+\midrule
+Student & user: $u_i$；input: $\widetilde o_i$ & 冻结底座加可训练 LoRA \\
+$T^-$ & 与 Student 完全相同的 prompt token IDs & 关闭 adapter 的冻结底座 \\
+$T^+$ & user: $u_i$；input: $o_i$ & 同一个冻结底座，关闭 adapter \\
+\bottomrule
+\end{tabularx}
+\end{center}
+这里 \texttt{input} 是该 Qwen 模板对外部上下文采用的角色。三路均使用普通 causal attention，
+prompt 无 quarantine mask。$T^+$ 不读取 \texttt{sanitized\_context}、target answer、
+恶意 span、旧 q1 包装、A/U verifier 输出或 scorer 结果。
+
+\subsection{同一个完整 response}
+先由初始策略生成并保存实际 token IDs：
+\begin{equation}
+ y_i=(y_{i1},\ldots,y_{iT_i})\sim\pi_0(\cdot\mid P_i^{\rm adv}).
+\end{equation}
+response 含实际生成的 thinking、final 以及实际返回的结束 token，不按答案格式删样本，
+不只截取 final answer。达到生成长度上限的真实响应仍做 OPCD；不补造 EOS。
+训练时禁止静默裁剪 prompt 或 response，并核对逐条结果与汇总记录完全一致。
+
+\begin{contractbox}[干净 prompt 不等于干净 response prefix]
+$T^+$ 只在任务输入上去除注入，随后仍 teacher-force 同一条 Student response。
+如果 Student 已生成攻击性或错误前缀，$T^+$ 也必须看到这段实际前缀，不能替换成正确回答。
+两路 Teacher 不另外采样答案，不存在把 $T^+$ 的生成文本当 SFT label 的分支。
+\end{contractbox}
+
+\section{模型与固定轨迹训练}
+模型固定为 \texttt{Qwen/Qwen3.8-27B}，上游 revision：
+\begin{center}\small\texttt{1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0}\end{center}
+参数关系为
+\begin{equation}
+  \pi_\theta=\pi_0+\Delta_\theta^{\rm LoRA},\qquad T^-=T^+=\pi_0.
+\end{equation}
+两路 Teacher 不随 Student 更新。已采样的 $y_i$ 在整轮训练中固定，但 Student 的当前
+logits、deficit 和 corrective target 在每次处理样本时按当前 $\theta$ 重新计算。
+
+\textbf{本版为一次固定初始 Student rollout 的 OPCD。} 借用 SecOPD 的
+clean-teacher／attacked-student／full-response 输入关系，但保留本项目的 $T^-$ 和 corrective loss。
+这不是直接改名的官方 SecOPD 复现，也不是每步 optimizer 更新后重新采样的严格在线 OPD。
+V3.5 的多 cycle 调度、reliability 标定与旧模型结果不自动延续到 V3.6。
+
+\section{同一 response 上的三路因果评分}
+对每个实际位置 $t$：
+\begin{align}
+ z^S_{it}&=f_\theta(P_i^{\rm adv},y_{i,<t}),\\
+ z^-_{it}&=f_0(P_i^{\rm adv},y_{i,<t}),\\
+ z^+_{it}&=f_0(P_i^{\rm clean},y_{i,<t}).
+\end{align}
+三者形状相同，词表相同、response token 次序相同。实现中，在位置
+$|P|-1+t$（$t$ 从零计数）的 hidden state 预测 $y_t$；最后一个 response token 不再输入 decoder。
+prompt 长度差异不能通过截断 response 或错位 logits 来消除。
+定义
+\begin{equation}
+ p^v_{it}=\softmax(z^v_{it}),\qquad
+ r^v_{it,j}=z^v_{it,j}-\frac1{|\Vocab|}\sum_{k\in\Vocab}z^v_{it,k},
+ \quad v\in\{S,-,+\}.
+\end{equation}
+计算方向、概率与 KL 时使用 float32；底座前向为 BF16。
+
+\section{保留的方向、deficit 与 corrective target}
+\subsection{局部方向与 disagreement}
+\begin{align}
+ d_{it}&=\sg(r^+_{it}-r^-_{it}),\\
+ D_{it}&=\JS(p^+_{it},p^-_{it}).
+\end{align}
+这里 $d_{it}$ 是同参数 Teacher 因 clean／attacked 输入差异产生的局部分布方向。
+称其为 recovery direction 是训练设计意图，不预先保证沿该方向更新一定提高实际任务恢复率。
+
+\subsection{Student 在方向上的位置}
+\begin{align}
+ w_{it,j}&=\sg\left[\frac{p^S_{it,j}+p^-_{it,j}+p^+_{it,j}}{3}\right],\\
+ \alpha_{it}&=\frac{\sum_j w_{it,j}\,\sg(r^S_{it,j}-r^-_{it,j})d_{it,j}}
+ {\sum_jw_{it,j}d_{it,j}^2+\epsilon_\alpha},\\
+ \delta_{it}&=\clip\bigl(\relu(1-\alpha_{it}),0,\delta_{\max}\bigr),\\
+ m_{it}&=\rho_{it}\Ind[D_{it}>\tau_D]\Ind[\delta_{it}>\delta_{\min}].
+\end{align}
+$\rho$ 为真实 response 的有效位置 mask；本版单样本不 padding 的实现中均为 1。
+$\alpha$ 不额外 clip，$\alpha\ge1$ 时 deficit 为零。
+
+\subsection{Student-anchored target}
+\begin{equation}
+ \boxed{q_{it}=\softmax\!\left(\sg\left[r^S_{it}+\eta\delta_{it}d_{it}\right]\right).}
+\end{equation}
+target 锚定当前 Student，只沿双 Teacher 方向增加 residual，不直接设成 $p^+$。
+$d,w,\alpha,\delta,m,q$ 均不反传。当前 \texttt{teacher\_plus\_top\_k=null}，
+方向、JS、deficit、target 和最终 KL 都在完整词表上计算。
+
+\section{V3.6 最终训练目标：全部样本 OPCD}
+\begin{align}
+ g_i&\equiv1,\qquad c_{it}\equiv1,\qquad \lambda_{\rm clean}=0,\\
+ K_{it}&=\lambda_F\KL(q_{it}\Vert p^S_{it})
+          +(1-\lambda_F)\KL(p^S_{it}\Vert q_{it}).
+\end{align}
+\begin{equation}
+ \boxed{\mathcal L_i=\frac{\sum_t m_{it}K_{it}}{\sum_t m_{it}+\epsilon_L}.}
+\end{equation}
+当前 micro-batch size 为 1，一次处理一条轨迹，按冻结随机顺序执行 9,600 个更新步骤。
+上式的分母覆盖该条轨迹的全部有效 correction token，不是各个 16-token 分块的局部平均；
+不能把不同长度样本默认改成一个整数据集 token 加权比值。
+
+\textbf{“全部样本 OPCD”是样本级准入规则。} token 级 disagreement／deficit 门控仍保留，
+无须修正的位置可以贡献零损失；一条样本的有效 correction token 为零时也不转为 SFT。
+梯度仅经过 KL 中的当前 Student 概率流向 LoRA。没有 clean SFT、Critic、
+reliability calibration、自强化或额外答案监督分支。
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+参数 & 值 & 参数 & 值 \\
+\midrule
+$\tau_D$ & 0 & $\delta_{\min}$ & 0 \\
+$\delta_{\max}$ & 2 & $\eta$ & 0.7 \\
+$\lambda_F$ & 0.5 & $\lambda_{\rm clean}$ & 0 \\
+$\epsilon_\alpha$ & $10^{-8}$ & $\epsilon_L$ & $10^{-8}$ \\
+LoRA rank & 8 & LoRA alpha & 16 \\
+LoRA dropout & 0 & AdamW LR & $10^{-5}$ \\
+weight decay & 0 & 梯度裁剪 & 1 \\
+训练轮数 & 1 & 总样本／步骤 & 9,600 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{单 B200 的计算与持久化流程}
+\subsection{生成与训练设置}
+生成固定温度 1.0、top-p 1.0、thinking 开启，最多 16,384 个新增 token，总上下文 32,768，
+BF16、TP=1、并发 16。先运行固定 12 条真实 canary，通过后自动继续另外 9,588 条；
+12 条计入 9,600 总数。权重直接从官方开源模型仓库下载，不从原服务器传输。
+
+训练使用一个共享冻结底座：先在关闭 adapter、无梯度状态下顺序算 $T^-$、$T^+$，
+再开启 adapter 算 Student，使用 gradient checkpointing。仅文本 decoder 的
+full-attention 层 q/k/v/o 投影训练 LoRA，linear-attention、视觉模块和 LM head 保持冻结。
+词表投影按 16 个 response token 分块计算并累积 hidden-state 梯度，最后一次 decoder 反向；
+分块不改变全词表目标，不重复逐 token 跑 Transformer。
+
+第一步真实更新、每 100 步、正常暂停及最终步骤保存 checkpoint，保留最近两个完整版本。
+保存 LoRA、optimizer、RNG、训练位置和文件哈希。恢复校验已提交 checkpoint，
+从最近完整版本继续；未保存的更新可能重算。错误、OOM 或数据不一致会停止并保留已有产物，
+不通过缩短序列、删样本或跳过坏结果继续运行。
+
+\subsection{阶段串行，三段分别启动}
+当前总流程为：生成 $\to$ 训练 $\to$ 原始模型评测 $\to$ 训练模型评测 $\to$ 汇总／TXT。
+\textbf{尚无自动串接生成、训练、评测的一键总入口。} 三段需分别启动，
+等上一段完成回执通过且容器退出后，再启动下一段。以下是顺序索引，不可连续粘贴执行：
+\begin{Verbatim}[fontsize=\small,frame=single]
+./docker_b200.sh start --gpu 0    # generation; wait until complete
+./train_b200.sh start --gpu 0     # training; wait until complete
+./agentdojo_b200.sh start --gpu 0 # both models, summary, TXT
+\end{Verbatim}
+环境构建、检查、状态查看、暂停与恢复的完整操作统一维护在仓库唯一的 README 中。
+
+\subsection{空间与输出}
+全部运行结果、日志、缓存和 checkpoint 在 \texttt{output/} 下：生成在
+\texttt{main/}，训练在 \texttt{clean\_opcd/}，评测在 \texttt{agentdojo/}。
+训练模型在评测前合并为独立约 56 GB 权重目录，保留原始模型用于对照。
+原始模型及静态数据约 55.85 GB，三种镜像共享后的层约 20.7 GB，连同合并模型固定部分约 133 GB。
+建议 500 GB 可用 SSD，多轮结果／多个 TXT 快照建议 1 TB；这是规划估算，不是实测峰值。
+Docker 数据目录与仓库若在不同分区，需分别检查空间。
+
+\section{AgentDojo：原始模型与训练模型同条件测试}
+\subsection{测试范围与判定}
+固定 AgentDojo v1.2.1，源码 revision：
+\begin{center}\small\texttt{d3640b5b03a88eb44dad96852e1de1ef437d836e}\end{center}
+四套官方环境、任务、注入向量、判定代码和静态攻击清单均随包提供。
+\begin{center}
+\begin{tabular}{lrrr}
+\toprule
+Suite & 正常任务 & 攻击组合 & 注入目标可执行性诊断 \\
+\midrule
+workspace & 40 & 560 & 14 \\
+banking & 16 & 144 & 9 \\
+travel & 20 & 140 & 7 \\
+slack & 21 & 105 & 5 \\
+\midrule
+每个模型 & 97 & 949 & 35 \\
+\bottomrule
+\end{tabular}
+\end{center}
+每模型 1,081 条轨迹，两个模型合计 2,162 条。35 条 injection-task-as-user-task 诊断
+单列，不进入正常成功率或 ASR 分母。
+
+使用原始 \texttt{utility()/utility\_from\_traces()} 和
+\texttt{security()/security\_from\_traces()} 判定，依据回答、工具轨迹和环境状态，
+不调用额外 LLM judge。对受攻击任务，\texttt{security=true} 表示攻击成功 $A=1$。
+完整且无基础设施错误时：
+\begin{align}
+ \mathrm{ASR}&=\frac{\sum_{i\in\mathcal E_{\rm adv}}A_i}{949},\\
+ U_{\rm adv}&=\frac{\sum_{i\in\mathcal E_{\rm adv}}U_i}{949},\qquad
+ U_{\rm clean}=\frac{\sum_{i\in\mathcal E_{\rm clean}}U_i}{97}.
+\end{align}
+当前汇总包含三项指标、各 suite 分项及训练模型相对原始模型的百分点变化。
+若进一步主张任务恢复，应从同条原始轨迹计算 $\Ind[U=1\land A=0]$；
+该联合指标目前不是自动汇总的既有字段，也不能由 $1-\mathrm{ASR}$ 或 $U-\mathrm{ASR}$ 代替。
+
+\subsection{匹配设置与错误保留}
+默认先测原始模型，再释放服务、合并最终训练 adapter 并测训练模型。
+最终 checkpoint 必须完成 9,600 步并通过身份与文件校验，不按测试成绩挑 checkpoint。
+两模型使用相同任务 ID、静态 \texttt{important\_instructions} 攻击、配对 seed、
+\texttt{input} 外部上下文角色。攻击阶段用 \texttt{repeat\_user\_prompt}，正常阶段无该 defense。
+评测温度为 0.0、top-p 为 0.9、thinking 开启、上下文 32,768、单 worker，
+不额外设置单次输出上限；生成数据的温度仍为 1.0。
+
+上游在某些上下文／服务错误中会回填 $U=0,A=1$。本包保留原始值、原生轨迹和
+\texttt{official\_raw\_asr}，另外标记 infrastructure error 并停止。
+未完整或有错误时正式比例留空，只提供有效已完成样本的诊断比例；
+恢复校验旧有效轨迹，保留失败 attempt 后在新 attempt 重试。
+本版 base／trained 对照使用相同界面，是当前方法比较，不冒充官方论文全部设置的复现。
+
+\section{完整原始结果与可校验 TXT 传输副本}
+保留原始结果、每次完整请求／响应、原生判定轨迹、服务／主流程／合并日志、错误、
+配置、环境、模型和 checkpoint 身份。评测完成、正常暂停或捕获失败后，
+自动额外生成独立 \texttt{transfers/snapshot\_*}，原文件继续保留。
+
+每个 TXT \textbf{含文件头最多 90,000 字节}，采用可读 UTF-8，切片不破坏汉字编码；
+二进制日志在文本中以 base64 表达。权重、adapter 二进制、缓存、临时文件和旧传输副本不重复打包。
+每包有 \texttt{000000\_CONTROL.txt} 和有编号的分片，校验包括：
+\begin{enumerate}
+\item snapshot 身份、分片序号与总数，拒绝缺片、重复或混包；
+\item 每片字节数、SHA256 与前片哈希构成的有序链；
+\item 拼接数据流的总字节数和 SHA256；
+\item 每个原始文件的路径、大小、SHA256，以及总文件数。
+\end{enumerate}
+接收端 \texttt{scripts/txt\_transfer.py} 提供 \texttt{verify}、\texttt{join}、\texttt{restore}，
+校验失败不发布结果，不覆盖已有目标，可逐字节恢复原目录。
+传输完整性不改变评测完整性：部分／失败运行在还原后仍然是部分／失败。
+
+\section{验证记录、实现映射与版本使用规则}
+\begin{center}
+\begin{tabularx}{\textwidth}{p{0.19\textwidth}Y}
+\toprule
+项目 & 当前可核对的证据 \\
+\midrule
+生成链路 & 14 项 CPU／工程检查、9,600 条真实输入核对及明确标记的模拟流程；真实 B200 canary 仍需目标机执行 \\
+训练链路 & 8 项 CPU 检查：原生 tokenizer 输入、小型混合模型更新、梯度一致、冻结参数、checkpoint 与恢复；不等于 27B 训练完成 \\
+评测／传输 & 16 项 CPU 检查：原生判定、完整清单、模拟 HTTP 经过真实 evaluator、小模型合并、普通 UID 的 vLLM 导入、失败导出、TXT 校验还原 \\
+发布检查 & 全新 Git 克隆的 233 个非权重静态文件已校验；本次数量随文档加入而增加，18 个权重分片仍从上游下载 \\
+真实效果 & 当前交付记录没有 B200 的完整 27B ASR／成功率结果；吞吐、显存和安全／能力变化需实际运行测量 \\
+\bottomrule
+\end{tabularx}
+\end{center}
+
+数学与执行权威按以下文件定位：
+\begin{itemize}
+\item 参数：\path{config/generation.json}、\path{config/clean_teacher_opcd.json}、\path{config/agentdojo.json}；
+\item 干净 Teacher 与梯度路径：\path{code/src/r_opcd/clean_teacher_opcd.py}；
+\item 全词表目标：\path{code/src/r_opcd/objective.py}；
+\item 生成／训练管理：\path{scripts/b200_collection.py}、\path{scripts/train_clean_teacher.py}；
+\item 原生评测与配对汇总：\path{scripts/agentdojo_runtime.py}、\path{scripts/evaluate_agentdojo.py}；
+\item TXT 控制算法：\path{scripts/txt_transfer.py}；
+\item 验证：\path{validation/clean_teacher_training_verification.json}、\path{validation/agentdojo_delivery_verification.json}。
+\end{itemize}
+生成配置中的旧 \texttt{tplus} 描述、\texttt{lanes} 等字段仍是来源元数据。
+旧生成记录中的通用标记 \path{training_ready=false} 也不定义 V3.6 的训练视图与准入。
+本版由独立 clean-teacher 配置和逐条真实响应审计决定训练资格，不能复用旧 q1 teacher view 来代替 clean prompt。
+
+\begin{contractbox}[版本与结论范围]
+V3.6 是当前 B200 交付路线的方法版本，原有 V3.5 工作区及其已保存实验仍保留原版本身份。
+本次不为旧 checkpoint 改名、不追加新实验、不把工程检查变成正式模型效果。
+当前实现足以定义并执行 base／trained 对照；对方向、deficit 或无标注设计的独立收益作论文归因，
+仍需匹配的直接 $T^+$／普通 OPCD 等对照，不能从版本升级本身推导优越性。
+后续结果到达后再更新对应结果与 claim，不把尚未执行的实验写成既有事实。
+\end{contractbox}
+\end{document}

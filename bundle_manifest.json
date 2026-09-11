@@ -26,8 +26,8 @@
       "sha256": "1d6f7ca4cadc60164e61e9dbc0b263c72af7d4edae8b796c1370870c4282f911"
     },
     "README.md": {
-      "bytes": 31396,
-      "sha256": "310cdbb86a98223571ad322296afe60c3bd0652d4bfc31dc85befada33ff2d4b"
+      "bytes": 32742,
+      "sha256": "46e7242e68dbcfbf7dc9d586e43cb3a3c542816d74e07a4172dd008c6b84693c"
     },
     "agentdojo_b200.sh": {
       "bytes": 437,
@@ -209,6 +209,14 @@
       "bytes": 534,
       "sha256": "cbdf4a7e1ca51354f6ffa4c9e6044533d7c1771383bcbc47d5ffe6bb8a71a90f"
     },
+    "docs/R-OPCD_V3.6_Mathematical_Training_Report.pdf": {
+      "bytes": 346803,
+      "sha256": "64307f5e9fdb8fbfd2faed89ac43728154cb1f56b0470e0e30e6b6448c60d5a3"
+    },
+    "docs/R-OPCD_V3.6_Mathematical_Training_Report.tex": {
+      "bytes": 21277,
+      "sha256": "ed124aa716d124f334c9bc70f9f70b8f13760e755834762dd24ed7bd78d010fa"
+    },
     "inputs/agentdojo_cases.jsonl": {
       "bytes": 1497708,
       "sha256": "349cb20693c79088d79a4e1c36b459646c086b819132cd83f4af6998a7e1b76e"
@@ -380,6 +388,10 @@
     "provenance/clean_teacher_opcd_contract.json": {
       "bytes": 3247,
       "sha256": "5d262f120dfaec6719669b1cfd1b54ad51422a8cdbb1fc19770d8f3aa7a89a1b"
+    },
+    "provenance/plan_v3_6.json": {
+      "bytes": 3153,
+      "sha256": "882669a3e02161d942c226230c1ecda46d4c4635a0811541b3282180f83dfaa1"
     },
     "provenance/source_a100_runner.py.txt": {
       "bytes": 20507,
@@ -941,6 +953,10 @@
       "bytes": 313,
       "sha256": "007d6a66363fa2e201dba6a10838a7cd8674e935972b76dca0409cd96de2fe1a"
     },
+    "validation/agentdojo_delivery_verification.json": {
+      "bytes": 6383,
+      "sha256": "42208d40540bcef8772fe317c3c58da5382b7cf69e44b588dba989e69dfda29a"
+    },
     "validation/clean_teacher_training_verification.json": {
       "bytes": 2531,
       "sha256": "ec3e4e4c26ddacd7be23c0de52446ffc5980afc8dc09d0715ae78e2df4c1b2a4"
@@ -985,6 +1001,10 @@
       "bytes": 1475,
       "sha256": "56e1fdf7ce50a9f7f0de5b6b351a71b14a1669457866460ccb7c5174d68332c4"
     },
+    "validation/plan_v3_6_document_verification.json": {
+      "bytes": 1603,
+      "sha256": "a1d6146021f5a7b372bf7f663cae0bbd1759bb7b2fde6f6d9373058188db95f2"
+    },
     "validation/portable_cpu_tests.json": {
       "bytes": 309,
       "sha256": "9df981354935d7aa3bdc6ca1ca02d5034470a581f44681c96911f1d98a4bcbcc"
@@ -1008,13 +1028,9 @@
     "validation/test_txt_transfer.py": {
       "bytes": 3658,
       "sha256": "be4e173f3c1263d4741df231fb739bb733a169cdbaedccb96c2c92f4c0b2d558"
-    },
-    "validation/agentdojo_delivery_verification.json": {
-      "bytes": 6383,
-      "sha256": "42208d40540bcef8772fe317c3c58da5382b7cf69e44b588dba989e69dfda29a"
     }
   },
-  "static_bytes": 55846220347,
+  "static_bytes": 55846594529,
   "runtime_results_excluded": "output/",
   "B200_execution_verified": false,
   "output_layout": {
@@ -1025,7 +1041,7 @@
     "supervisor_log": "output/main/supervisor.log",
     "model_server_log": "output/main/server.log"
   },
-  "updated_at_utc": "2026-09-10T12:02:36.372708+00:00",
+  "updated_at_utc": "2026-09-11T09:52:24.599882+00:00",
   "operator_guide": "README.md",
   "git_distribution": {
     "large_assets_excluded": [
@@ -1097,5 +1113,8 @@
     "transport_max_bytes": 90000,
     "B200_evaluation_verified": false,
     "verification": "validation/agentdojo_delivery_verification.json"
-  }
+  },
+  "plan_version": "3.6",
+  "plan_contract": "provenance/plan_v3_6.json",
+  "method_report": "docs/R-OPCD_V3.6_Mathematical_Training_Report.pdf"
 }

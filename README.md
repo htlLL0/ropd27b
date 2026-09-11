@@ -1,4 +1,13 @@
-# 在单张 B200 上生成数据、训练 clean-T+ OPCD 并完成 AgentDojo 评测
+# R-OPCD V3.6：单 B200 生成、训练与 AgentDojo 评测
+
+**当前方案版本：3.6（2026-09-11）。** 完整输入合同、数学目标、3.5 → 3.6 修改清单和验证范围见 [V3.6 数学训练与评测方案 PDF](docs/R-OPCD_V3.6_Mathematical_Training_Report.pdf)，可编辑源文件见 [LaTeX](docs/R-OPCD_V3.6_Mathematical_Training_Report.tex)。本 README 仍是唯一操作说明；本次将已实现的修改归入 3.6，不改变采样、训练或评测参数，也不将旧模型结果改称 3.6 结果。
+
+相对 3.5，当前方案明确采用：
+
+- **干净输入 T+**：直接使用原始 `clean_context`，取消旧 q1/guard 和 attention quarantine；T− 与 student 仍看相同受攻击输入，三路评分同一条实际 response。
+- **无标注、全部 OPCD**：9,600 条不按 A/U 筛选，`g=1`、`c=1`；取消 reliability 标定和正常样例 SFT，保留方向、deficit、Student-anchored target 与全词表 Hybrid-KL。无标注仍需要原始 clean/attacked 成对输入；token 级门控仍保留。
+- **固定轨迹、单 B200**：Qwen3.8-27B 一次生成、一轮 LoRA 训练；共用冻结底座、16-token 词表投影分块，不执行多 cycle 刷新。
+- **双模型评测和完整传输**：原始模型与最终训练模型均走 AgentDojo 原生判定，原始结果和过程日志保留，额外生成每份不超过 90,000 字节且可校验、拼接、还原的 TXT。
 
 按本 README 操作即可。**仓库已包含代码、输入数据和模型配套文件；在 B200 服务器上从上游开源模型仓库下载 18 个权重分片。全部日志、生成结果和训练 checkpoint 统一保存在仓库的 `output/` 中。**
 

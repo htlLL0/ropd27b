@@ -1,0 +1,54 @@
+{
+  "schema": "r-opcd-plan-version-v1",
+  "plan_version": "3.6",
+  "date_beijing": "2026-09-11",
+  "previous_plan": "3.5",
+  "status": "implemented engineering contract; formal B200 results not supplied",
+  "implementation_baseline_commit": "86762f62b82e7ac9bfca7f3c6d175114bb974f8a",
+  "report_pdf": "docs/R-OPCD_V3.6_Mathematical_Training_Report.pdf",
+  "report_source": "docs/R-OPCD_V3.6_Mathematical_Training_Report.tex",
+  "operator_guide": "README.md",
+  "active_training_config": "config/clean_teacher_opcd.json",
+  "changes": {
+    "teacher_plus": "original user_query + clean_context; ordinary attention; no q1/guard or span quarantine",
+    "teacher_minus_and_student": "identical original attacked prompt token IDs",
+    "response": "same complete realized initial-student response for all views",
+    "samples": 9600,
+    "semantic_label_filter": false,
+    "attack_gate": 1,
+    "reliability_weight": 1,
+    "reliability_calibration": false,
+    "clean_sft_weight": 0,
+    "retained_objective": "full-vocabulary direction, Student-specific deficit, Student-anchored target, forward/reverse Hybrid KL",
+    "rollout": "one fixed initial-student rollout; one shuffled training epoch; no refreshed cycles",
+    "runtime": "one B200, Qwen3.8-27B BF16, TP1; sequential frozen teachers; text full-attention LoRA; response-chunked full-vocabulary head",
+    "evaluation": "native AgentDojo on both original base and completed trained model",
+    "transport": "original results/logs plus readable UTF-8 TXT parts <=90000 bytes, ordered SHA256 verification and exact restoration"
+  },
+  "legacy_metadata_not_active_training_authority": [
+    "config/generation.json:tplus",
+    "config/generation.json:lanes",
+    "old generated trajectory teacher views",
+    "generic training_ready=false marker"
+  ],
+  "runtime_code_or_parameters_changed_by_this_version_documentation": false,
+  "verified_file_sha256": {
+    "config/generation.json": "9949f80c7389d50155cd0479067a6837f1ebee4e42cfb38604b6da5710e5644e",
+    "config/clean_teacher_opcd.json": "48672dc804343330ad394f1c6d6fe1d24ff71dd51bdbfff77385d89ee6404ae1",
+    "config/agentdojo.json": "a27033df77bc6dae7dee1d931c983be89e3d198bd56e8326e1363abb47250503",
+    "code/src/r_opcd/clean_teacher_opcd.py": "25ede0d9eac66917abe4b900ac6931812a140dab4599100b2023ddcf8df78e23",
+    "code/src/r_opcd/objective.py": "f11ee182f2889bd14a18dff3dc9105da69880ee66b8c5fb7db89b1eb32f106b5",
+    "scripts/train_clean_teacher.py": "08397806f12571e7b3506885e5f5604dc0a9a3e8f2ecf356374caca82e70af74",
+    "scripts/agentdojo_runtime.py": "e15edb55adb72871fcd4a3c97272351ecf06d8863617cc82420c1ae4f8447b51",
+    "scripts/evaluate_agentdojo.py": "695fb91f80d6081fdca66dc578a41685a4339c6b31fa6ae41027b11926c3bc73",
+    "scripts/txt_transfer.py": "3c9b5036d9d400657c3ccbd73c2ffd54cf0ca23ef0b72980bcc4bf1ec35b0a8e"
+  },
+  "evidence": {
+    "generation_cpu_checks": 14,
+    "training_cpu_checks": 8,
+    "agentdojo_cpu_checks": 16,
+    "formal_B200_27B_training_completed_in_delivery_records": false,
+    "formal_B200_AgentDojo_results_in_delivery_records": false
+  },
+  "created_at_utc": "2026-09-11T09:49:28.832142+00:00"
+}

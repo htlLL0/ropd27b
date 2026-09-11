@@ -1,0 +1,36 @@
+{
+  "schema": "r-opcd-v3.6-document-verification-v1",
+  "status": "pass",
+  "at_utc": "2026-09-11T09:52:24.599882+00:00",
+  "plan_version": "3.6",
+  "pdf": {
+    "path": "docs/R-OPCD_V3.6_Mathematical_Training_Report.pdf",
+    "pages": 8,
+    "bytes": 346803,
+    "sha256": "64307f5e9fdb8fbfd2faed89ac43728154cb1f56b0470e0e30e6b6448c60d5a3",
+    "xelatex": "compiled successfully with resolved cross-references",
+    "overfull_boxes": 0,
+    "missing_characters": 0,
+    "all_sections_and_key_parameters_extracted": true,
+    "visual_review": "All body pages inspected in overview; final cover reviewed after compacting the table of contents. No clipped content."
+  },
+  "source": {
+    "path": "docs/R-OPCD_V3.6_Mathematical_Training_Report.tex",
+    "sha256": "ed124aa716d124f334c9bc70f9f70b8f13760e755834762dd24ed7bd78d010fa"
+  },
+  "checks": {
+    "source_equations_checked_against_objective_py": true,
+    "sample_normalization_one_trajectory_per_step": true,
+    "active_clean_prompt_and_shared_response_checked": true,
+    "configuration_consistent_with_report": true,
+    "referenced_runtime_files_unchanged_from_implementation_baseline": true,
+    "single_operator_README": true,
+    "README_local_links_exist": true,
+    "README_bash_examples_parse": true,
+    "adjacent_0820_report_copies_byte_identical": true
+  },
+  "runtime_checks_rerun": false,
+  "reason": "Documentation-only version update; runtime source/config hashes unchanged and earlier engineering validation remains separately identified.",
+  "new_GPU_or_model_jobs_launched": false,
+  "formal_B200_performance_claimed": false
+}
